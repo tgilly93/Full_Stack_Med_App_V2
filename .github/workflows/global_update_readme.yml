@@ -1,0 +1,44 @@
+name: Global Update README
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # daily
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled, assigned, unassigned, milestoned, demilestoned, locked, unlocked]
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Fetch Open Issues & Update README
+        run: |
+          # Fetch open frontend issues
+          frontend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
+          jq -r '.[] | select(.labels[].name == "frontend") | "- [#\(.number)](\(.html_url)) \(.title)"')
+          
+          # Fetch open backend issues
+          backend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
+          jq -r '.[] | select(.labels[].name == "backend") | "- [#\(.number)](\(.html_url)) \(.title)"')
+          
+          # Replace the frontend and backend issues in README.md while keeping other content intact
+          sed -i '/<!-- AUTO-ISSUES-START -->/,/<!-- AUTO-ISSUES-END -->/c\
+          <!-- AUTO-ISSUES-START -->\n## 🖥️ Frontend Issues\n\n'"$frontend_issues"'\n\n## ⚙️ Backend Issues\n\n'"$backend_issues"'\n<!-- AUTO-ISSUES-END -->' README.md
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git commit -m "🔄 Auto-update README with open issues" || exit 0
+          git push
