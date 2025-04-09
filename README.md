@@ -1,3 +1,4 @@
+
 ## 🖥️ Frontend Issues
 
 <!-- AUTO-ISSUES-START -->
