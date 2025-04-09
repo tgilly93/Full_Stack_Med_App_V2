@@ -23,17 +23,14 @@ jobs:
 
       - name: Fetch Open Issues & Update README
         run: |
-          # Fetch open frontend issues
           frontend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
           jq -r '.[] | select(.labels[].name == "frontend") | "- [#\(.number)](\(.html_url)) \(.title)"')
           
-          # Fetch open backend issues
           backend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
           jq -r '.[] | select(.labels[].name == "backend") | "- [#\(.number)](\(.html_url)) \(.title)"')
           
-          # Replace the frontend and backend issues in README.md while keeping other content intact
           sed -i '/<!-- AUTO-ISSUES-START -->/,/<!-- AUTO-ISSUES-END -->/c\
-          <!-- AUTO-ISSUES-START -->\n## 🖥️ Frontend Issues\n\n'"$frontend_issues"'\n\n## ⚙️ Backend Issues\n\n'"$backend_issues"'\n<!-- AUTO-ISSUES-END -->' README.md
+          <!-- AUTO-ISSUES-START -->\n'"$frontend_issues"'\n\n'"$backend_issues"'\n<!-- AUTO-ISSUES-END -->' README.md
 
       - name: Commit and Push
         run: |
