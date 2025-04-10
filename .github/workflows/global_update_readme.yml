@@ -24,18 +24,23 @@ jobs:
       - name: Fetch Open Issues & Update README
         run: |
           frontend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
-          jq -r '.[] | select(.labels[].name == "frontend") | "- [#\(.number)](\(.html_url)) \(.title)"')
+          jq -r '.[] | select([.labels[].name] | index("frontend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
           
           backend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
-          jq -r '.[] | select(.labels[].name == "backend") | "- [#\(.number)](\(.html_url)) \(.title)"')
-          
-          sed -i '/<!-- AUTO-ISSUES-START -->/,/<!-- AUTO-ISSUES-END -->/c\
-          <!-- AUTO-ISSUES-START -->\n'"$frontend_issues"'\n\n'"$backend_issues"'\n<!-- AUTO-ISSUES-END -->' README.md
+          jq -r '.[] | select([.labels[].name] | index("backend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
+
+        
+          sed -i '/<!-- FRONTEND-ISSUES-START -->/,/<!-- FRONTEND-ISSUES-END -->/c\
+          <!-- FRONTEND-ISSUES-START -->\n'"$frontend_issues"'\n<!-- FRONTEND-ISSUES-END -->' README.md
+
+          sed -i '/<!-- BACKEND-ISSUES-START -->/,/<!-- BACKEND-ISSUES-END -->/c\
+          <!-- BACKEND-ISSUES-START -->\n'"$backend_issues"'\n<!-- BACKEND-ISSUES-END -->' README.md
 
       - name: Commit and Push
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git pull --rebase
           git add README.md
           git commit -m "🔄 Auto-update README with open issues" || exit 0
           git push
