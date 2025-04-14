@@ -1,30 +1,54 @@
-name: Auto Update Parent Issue Checklist
+name: Global Update README
 
 on:
   schedule:
-    - cron: '0 * * * *'  # hourly (adjust as needed)
+    - cron: '0 0 * * *'  # daily
   workflow_dispatch:
+  push:
+    branches:
+      - main
   issues:
-    types: [opened, edited, closed, reopened]
+    types: [opened, edited, closed, reopened, labeled, unlabeled]
 
 jobs:
-  update-checklists:
+  update-readme:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Install jq
+        run: sudo apt-get install jq
 
-      - name: Install dependencies
-        run: npm install @actions/github @actions/core
+      - name: Install Node Dependencies
+        run: npm install @octokit/core
 
-      - name: Run update script
+      - name: Fetch Open Issues & Update README
+        run: |
+          frontend_issues=$(curl -s "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
+          jq -r '.[] | select([.labels[].name] | index("frontend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
+
+          backend_issues=$(curl -s "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
+          jq -r '.[] | select([.labels[].name] | index("backend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
+
+          sed -i '/<!-- FRONTEND-ISSUES-START -->/,/<!-- FRONTEND-ISSUES-END -->/c\
+          <!-- FRONTEND-ISSUES-START -->\n'"$frontend_issues"'\n<!-- FRONTEND-ISSUES-END -->' README.md
+
+          sed -i '/<!-- BACKEND-ISSUES-START -->/,/<!-- BACKEND-ISSUES-END -->/c\
+          <!-- BACKEND-ISSUES-START -->\n'"$backend_issues"'\n<!-- BACKEND-ISSUES-END -->' README.md
+
+      - name: Update Parent Issue Checklists
+        run: node .github/scripts/update-parent-checklists.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: node .github/scripts/update-parent-checklists.js
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git commit -m "🔄 Auto-update README and checklists" || exit 0
+          git pull --rebase
+          git push
