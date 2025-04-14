@@ -1,46 +1,30 @@
-name: Global Update README
+name: Auto Update Parent Issue Checklist
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # daily
+    - cron: '0 * * * *'  # hourly (adjust as needed)
   workflow_dispatch:
-  push:
-    branches:
-      - main
   issues:
-    types: [opened, edited, closed, reopened, labeled, unlabeled, assigned, unassigned, milestoned, demilestoned, locked, unlocked]
+    types: [opened, edited, closed, reopened]
 
 jobs:
-  update-readme:
+  update-checklists:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install jq
-        run: sudo apt-get install jq
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      - name: Fetch Open Issues & Update README
-        run: |
-          frontend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
-          jq -r '.[] | select([.labels[].name] | index("frontend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
-          
-          backend_issues=$(curl -s "https://api.github.com/repos/tgilly93/Full_Stack_Med_App_V2/issues?state=open" | \
-          jq -r '.[] | select([.labels[].name] | index("backend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
+      - name: Install dependencies
+        run: npm install @actions/github @actions/core
 
-        
-          sed -i '/<!-- FRONTEND-ISSUES-START -->/,/<!-- FRONTEND-ISSUES-END -->/c\
-          <!-- FRONTEND-ISSUES-START -->\n'"$frontend_issues"'\n<!-- FRONTEND-ISSUES-END -->' README.md
-
-          sed -i '/<!-- BACKEND-ISSUES-START -->/,/<!-- BACKEND-ISSUES-END -->/c\
-          <!-- BACKEND-ISSUES-START -->\n'"$backend_issues"'\n<!-- BACKEND-ISSUES-END -->' README.md
-
-      - name: Commit and Push
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add README.md
-          git commit -m "🔄 Auto-update README with open issues" || exit 0
-          git pull --rebase
-          git push
+      - name: Run update script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node .github/scripts/update-parent-checklists.js
