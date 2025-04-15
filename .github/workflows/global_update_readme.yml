@@ -2,7 +2,7 @@ name: Global Update README
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # daily
+    - cron: '0 0 * * *'  # Run daily
   workflow_dispatch:
   push:
     branches:
@@ -24,36 +24,19 @@ jobs:
       - name: Fetch Open Issues & Update README
         run: |
           frontend_issues=$(curl -s "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
-            jq -r '.[] | select([.labels[].name] | index("frontend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
+          jq -r '.[] | select(.labels | map(.name) | index("frontend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
 
           backend_issues=$(curl -s "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
-            jq -r '.[] | select([.labels[].name] | index("backend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
+          jq -r '.[] | select(.labels | map(.name) | index("backend")) | "- [#\(.number)](\(.html_url)) \(.title)"')
 
-          # Use temporary files to store the new content
-          {
-            echo "<!-- FRONTEND-ISSUES-START -->"
-            echo "$frontend_issues"
-            echo "<!-- FRONTEND-ISSUES-END -->"
-          } > frontend_block.txt
+          sed -i '/<!-- FRONTEND-ISSUES-START -->/,/<!-- FRONTEND-ISSUES-END -->/c\
+          <!-- FRONTEND-ISSUES-START -->\n'"$frontend_issues"'\n<!-- FRONTEND-ISSUES-END -->' README.md
 
-          {
-            echo "<!-- BACKEND-ISSUES-START -->"
-            echo "$backend_issues"
-            echo "<!-- BACKEND-ISSUES-END -->"
-          } > backend_block.txt
+          sed -i '/<!-- BACKEND-ISSUES-START -->/,/<!-- BACKEND-ISSUES-END -->/c\
+          <!-- BACKEND-ISSUES-START -->\n'"$backend_issues"'\n<!-- BACKEND-ISSUES-END -->' README.md
 
-          # Replace the blocks safely using awk
-          awk 'BEGIN { skip=0 }
-            /<!-- FRONTEND-ISSUES-START -->/ { skip=1; while ((getline line < "frontend_block.txt") > 0) print line; next }
-            /<!-- FRONTEND-ISSUES-END -->/ { skip=0; next }
-            skip == 0 { print }
-          ' README.md > tmp && mv tmp README.md
-
-          awk 'BEGIN { skip=0 }
-            /<!-- BACKEND-ISSUES-START -->/ { skip=1; while ((getline line < "backend_block.txt") > 0) print line; next }
-            /<!-- BACKEND-ISSUES-END -->/ { skip=0; next }
-            skip == 0 { print }
-          ' README.md > tmp && mv tmp README.md
+      - name: Install octokit
+        run: npm install @octokit/core
 
       - name: Run Checklist Automation Script
         run: node .github/scripts/update-parent-checklists.js
