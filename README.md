@@ -3,6 +3,7 @@
 ## 🖥️ Frontend Issues
 
 <!-- FRONTEND-ISSUES-START -->
+- [#17](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/17) Appointment view & component
 - [#16](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/16) Login View & component
 - [#15](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/15) Logout view & component
 - [#14](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/14) Register view & component
