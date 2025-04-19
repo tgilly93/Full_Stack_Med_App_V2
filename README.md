@@ -3,7 +3,7 @@
 ## 🖥️ Frontend Issues
 
 <!-- FRONTEND-ISSUES-START -->
-
+- [#12](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/12) Migration - Components & Views
 <!-- FRONTEND-ISSUES-END -->
 
 ## ⚙️ Backend Issues
