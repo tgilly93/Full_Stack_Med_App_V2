@@ -1,12 +1,16 @@
 import React, { useRef } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import Register from "../components/Register"; // Import the Register component
+import Register from "../components/Register"; 
+import Login from "../components/Login";
 
 function Welcome() {
   const registerRef = useRef(null);
-  const scrollToRegister = () => {
-    registerRef.current?.scrollIntoView({ behavior: "smooth" });
+  const loginRef = useRef(null);
+
+  const scrollToSection = (ref) => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
   };
+
 
     return (
       <>
@@ -18,16 +22,23 @@ function Welcome() {
           <Col className="text-center">
             <h1>This is the Welcome Page!</h1>
             <p>Welcome to my fullstack application!</p>
-            <Button variant="primary" onClick={scrollToRegister}>
+            <Button variant="primary" onClick={() => scrollToSection(registerRef)}>
               Create an Account
             </Button>
+
+            <div className="my-3" />
+
+            <p>Returning User?</p>
+            <Button variant="secondary" onClick={() => scrollToSection(loginRef)}>
+              Login
+            </Button>
+
           </Col>
         </Row>
       </Container>
 
-      <div ref={registerRef}>
-        <Register />
-      </div>
+      <Register ref={registerRef} />
+      <Login ref={loginRef} />
       </>
     );  
 }   
