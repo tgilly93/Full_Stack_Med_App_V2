@@ -12,7 +12,7 @@ INSERT INTO users (username, password_hash, role, name, address, city, state_cod
 
 INSERT INTO office (office_name, office_address, office_phone_number, office_city, state, zip_code, office_open, office_close) VALUES ('test_name', '123 test lane', '000-555-5555', 'Newark', 'DE', '19702', '08:00:00', '19:00:00');
 
-INSERT INTO patient (user_id, patient_first_name, patient_last_name, patient_date_of_birth, patient_address, patient_city, patient_state, zip_code, patient_phone_number) VALUES ('4', 'patient_test_fname', 'patient_test_lname', '01/01/1900', '123 test lane', 'Newark', 'DE', '19702', '555-000-5555');
+INSERT INTO patient (user_id, patient_first_name, patient_last_name, patient_date_of_birth, patient_address, patient_city, patient_state, zip_code, patient_phone_number) VALUES ('4', 'patient_test_fname', 'patient_test_lname', '1900-01-01', '123 test lane', 'Newark', 'DE', '19702', '555-000-5555');
 
 INSERT INTO staff (office_id, staff_first_name, staff_last_name, staff_address, staff_phone_number) VALUES ('1','test_fname', 'test_lname', '456 test lane', '555-000-5555');
 
@@ -22,19 +22,19 @@ INSERT INTO prescription (prescription_name, patient_id, npi_number, prescriptio
 
 INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status) VALUES ('Tylenol', '1', '1000004441', 'Pain reliever', '22.98', 'Uninsured', 'Active');
 
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '08/22/2024', '08:00', '09:00', 'Well Visit', 'Confirmed');
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '2024-08-22', '08:00', '09:00', 'Well Visit', 'Confirmed');
 
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '09/23/2024', '10:00', '12:00', 'Outpatient Visit', 'Confirmed');
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '2024-09-23', '10:00', '12:00', 'Outpatient Visit', 'Confirmed');
 
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '10/09/2024', '13:00', '13:30', 'OBGYN Visit', 'Confirmed');
+INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '2024-10-09', '13:00', '13:30', 'OBGYN Visit', 'Confirmed');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '08/22/2024', 'Wednesday', '08:00', '09:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-08-22', 'Wednesday', '08:00', '09:00', 'true');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '10/09/2024', 'Thursday', '10:00', '11:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-10-09', 'Thursday', '10:00', '11:00', 'true');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '09/23/2024', 'Thursday', '11:00', '12:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-09-23', 'Thursday', '11:00', '12:00', 'true');
 
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '10/09/2024', 'Friday', '13:00', '14:00', 'true');
+INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-10-09', 'Friday', '13:00', '14:00', 'true');
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------
@@ -377,7 +377,7 @@ FROM
 GROUP BY
     	date_trunc('month', a.date),
     	a.date,
-	s.staff_last_name, 
+	    s.staff_last_name,
     	s.staff_first_name, 
     	a.patient_id, 
     	p.patient_first_name, 
