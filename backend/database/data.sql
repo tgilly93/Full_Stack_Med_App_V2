@@ -1,40 +1,89 @@
 BEGIN TRANSACTION;
 
-INSERT INTO users (username,password_hash,role, name, address, city, state_code, zip) VALUES ('user','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER', 'Test User', '123 test lane', 'Newark', 'DE', '19702');
-INSERT INTO users (username,password_hash,role, name, address, city, state_code, zip) VALUES ('admin','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_ADMIN', 'System Admin', '123 test lane', 'Newark', 'DE', '19702');
-
 ---------------------------------------------------------------------------
 --------------------------test data for view modeling----------------------
 
-INSERT INTO users (username, password_hash, role, name, address, city, state_code, zip) VALUES ('clinician_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_CLINICIAN', 'Clinician Test', '123 test lane', 'Newark', 'DE', '19702');
-
-INSERT INTO users (username, password_hash, role, name, address, city, state_code, zip) VALUES ('patient_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_PATIENT', 'Patient Test', '123 test lane', 'Newark', 'DE', '19702');
-
-INSERT INTO office (office_name, office_address, office_phone_number, office_city, state, zip_code, office_open, office_close) VALUES ('test_name', '123 test lane', '000-555-5555', 'Newark', 'DE', '19702', '08:00:00', '19:00:00');
-
-INSERT INTO patient (user_id, patient_first_name, patient_last_name, patient_date_of_birth, patient_address, patient_city, patient_state, zip_code, patient_phone_number) VALUES ('4', 'patient_test_fname', 'patient_test_lname', '1900-01-01', '123 test lane', 'Newark', 'DE', '19702', '555-000-5555');
-
-INSERT INTO staff (office_id, staff_first_name, staff_last_name, staff_address, staff_phone_number) VALUES ('1','test_fname', 'test_lname', '456 test lane', '555-000-5555');
-
-INSERT INTO clinician (user_id, npi_number, staff_id, primary_office, clinician_rate_per_hour) VALUES ('3','1000004441', '1', '1', '89.00');
-
-INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status) VALUES ('Zolof', '1', '1000004441', 'Treats depression, anxiety, obsessive-compulsive disorder (OCD), post-traumatic stress disorder (PTSD), and premenstrual dysphoric disorder (PMDD)', '22.98', 'Uninsured', 'Active');
-
-INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status) VALUES ('Tylenol', '1', '1000004441', 'Pain reliever', '22.98', 'Uninsured', 'Active');
-
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '2024-08-22', '08:00', '09:00', 'Well Visit', 'Confirmed');
-
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '2024-09-23', '10:00', '12:00', 'Outpatient Visit', 'Confirmed');
-
-INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status) VALUES ('1000004441', '1', '2024-10-09', '13:00', '13:30', 'OBGYN Visit', 'Confirmed');
-
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-08-22', 'Wednesday', '08:00', '09:00', 'true');
-
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-10-09', 'Thursday', '10:00', '11:00', 'true');
-
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-09-23', 'Thursday', '11:00', '12:00', 'true');
-
-INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available) VALUES ('1000004441','1', '2024-10-09', 'Friday', '13:00', '14:00', 'true');
+WITH user_insert_clinician AS (
+    INSERT INTO users (username, password_hash, role, name, address, city, state_code, zip)
+    VALUES
+    ('clinician_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_CLINICIAN', 'Clinician Test', '123 test lane', 'Newark', 'DE', '19702')
+    RETURNING user_id
+),
+user_insert_patient AS (
+    INSERT INTO users (username, password_hash, role, name, city, state_code, zip)
+    VALUES
+    ('patient_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_PATIENT', 'Patient Test', '123 test lane', 'Newark', 'DE', '19702')
+    RETURNING user_id
+),
+office_insert AS (
+    INSERT INTO office (office_name, office_address, office_phone_number, office_city, state, zip_code, office_open, office_close)
+    VALUES
+    ('test_name', '123 test lane', '000-555-5555', 'Newark', 'DE', '19702', '08:00:00', '19:00:00')
+    RETURNING office_id
+),
+patient_insert AS (
+    INSERT INTO patient (user_id, patient_first_name, patient_last_name, patient_date_of_birth, patient_address, patient_city, patient_state, zip_code, patient_phone_number)
+    SELECT office_id, 'patient_test_fname', 'patient_test_lname', '1900-01-01', '123 test lane', 'Newark', 'DE', '19702', '555-000-5555'
+    FROM user_insert_patient
+    RETURNING patient_id
+),
+staff_insert AS (
+    INSERT INTO staff (office_id, staff_first_name, staff_last_name, staff_address, staff_phone_number)
+    SELECT office_id, 'test_fname', 'test_lname', '456 Test Lane', '555-000-5555'
+    FROM office_insert
+    RETURNING staff_id
+),
+clinician_insert AS (
+    INSERT INTO clinician (user_id, npi_number, staff_id, primary_office, clinician_rate_per_hour)
+    SELECT user_id, '1000004441', staff_id, office_id, '89.00'
+    FROM user_insert_clinician, staff_insert, office_insert
+    RETURNING clinician_id
+),
+prescription_insert_1 AS (
+    INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status)
+    SELECT patient_id, '1000004441', '1000004441', 'Treats depression, anxiety, obsessive-compulsive disorder (OCD), post-traumatic stress disorder (PTSD), and premenstrual dysphoric disorder (PMDD)', '22.98', 'Uninsured', 'Active'
+    FROM patient_insert
+),
+prescription_insert_2 AS (
+    INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status)
+    SELECT patient_id, '1000004441', '1000004441', 'Pain reliever', '22.98', 'Uninsured', 'Active'
+    FROM patient_insert
+),
+appointment_insert_1 AS (
+    INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status)
+    SELECT '1000004441', patient_id, '2024-08-22', '08:00', '09:00', 'Well Visit', 'Confirmed'
+    FROM patient_insert
+),
+appointment_insert_2 AS (
+    INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status)
+    SELECT '1000004441', patient_id, '2024-09-23', '10:00', '12:00', 'Outpatient Visit', 'Confirmed'
+    FROM patient_insert
+),
+appointment_insert_3 AS (
+    INSERT INTO appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status)
+    SELECT '1000004441', patient_id, '2024-10-09', '13:00', '13:30', 'OBGYN Visit', 'Confirmed'
+    FROM patient_insert
+),
+availability_insert_1 AS (
+    INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available)
+    SELECT '1000004441', office_id, '2024-08-22', 'Wednesday', '08:00', '09:00', 'true'
+    FROM clinician_insert, office_insert
+),
+availability_insert_2 AS (
+    INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available)
+    SELECT '1000004441', office_id, '2024-10-09', 'Thursday', '10:00', '11:00', 'true'
+    FROM clinician_insert, office_insert
+),
+availability_insert_3 AS (
+   INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available)
+   SELECT '1000004441', office_id, '2024-09-23', 'Thursday', '11:00', '12:00', 'true'
+   FROM clinician_insert, office_insert
+),
+availability_insert_4 AS (
+   INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available)
+   SELECT '1000004441', office_id, '2024-10-09', 'Friday', '13:00', '14:00', 'true'
+   FROM clinician_insert, office_insert
+)
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------

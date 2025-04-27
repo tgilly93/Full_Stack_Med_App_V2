@@ -84,15 +84,14 @@ public class User {
    }
 
    public String getAuthoritiesString() {
-      String authString = "";
+      StringBuilder authString = new StringBuilder();
       for (Authority auth : authorities) {
-         if (authString.length() == 0) {
-            authString += auth.getName();
-         } else {
-            authString += "," + auth.getName();
+         if (authString.length() > 0) {
+            authString.append(",");
          }
+         authString.append(auth.getName());
       }
-      return authString;
+      return authString.toString();
    }
 
    public void setAuthorities(Set<Authority> authorities) {
