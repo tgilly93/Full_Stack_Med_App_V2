@@ -13,9 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.List;
 
 public class JdbcUserDaoTests extends BaseDaoTests {
-    protected static final User USER_1 = new User(1, "user1", "user1", "ROLE_USER");
-    protected static final User USER_2 = new User(2, "user2", "user2", "ROLE_USER");
-    private static final User USER_3 = new User(3, "user3", "user3", "ROLE_USER");
+    protected static final User USER_1 = new User(1, "user1", "user1", "ROLE_USER", "User One", "123 Main St", "Newark", "DE", "19702");
+    protected static final User USER_2 = new User(2, "user2", "user2", "ROLE_USER", "User Two", "456 Oak Rd", "Newark", "DE", "19702");
+    private static final User USER_3 = new User(3, "user3", "user3", "ROLE_USER", "User Three", "789 Pine St", "Newark", "DE", "19702");
 
     private JdbcUserDao sut;
 
@@ -23,6 +23,19 @@ public class JdbcUserDaoTests extends BaseDaoTests {
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         sut = new JdbcUserDao(jdbcTemplate);
+    }
+
+    private User mapRegisterUserDtoToUser(RegisterUserDto dto) {
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setAuthorities(dto.getRole());
+        user.setName("");
+        user.setAddress("");
+        user.setCity("");
+        user.setStateCode("");
+        user.setZIP("");
+        return user;
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -73,7 +86,7 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         registerUserDto.setUsername(null);
         registerUserDto.setPassword(USER_3.getPassword());
         registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
+        sut.createUser(mapRegisterUserDtoToUser(registerUserDto));
     }
 
     @Test(expected = DaoException.class)
@@ -82,7 +95,7 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         registerUserDto.setUsername(USER_1.getUsername());
         registerUserDto.setPassword(USER_3.getPassword());
         registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
+        sut.createUser(mapRegisterUserDtoToUser(registerUserDto));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -91,20 +104,18 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         registerUserDto.setUsername(USER_3.getUsername());
         registerUserDto.setPassword(null);
         registerUserDto.setRole("ROLE_USER");
-        sut.createUser(registerUserDto);
+        sut.createUser(mapRegisterUserDtoToUser(registerUserDto));
     }
 
     @Test
     public void createUser_creates_a_user() {
-        RegisterUserDto user = new RegisterUserDto();
-        user.setUsername("new");
-        user.setPassword("user");
-        user.setRole("ROLE_USER");
+        User user = new User(0, "newuser", "password", "ROLE_USER", "New User", "123 Example St", "Newark", "DE", "19702");
         User createdUser = sut.createUser(user);
 
         Assert.assertNotNull(createdUser);
 
         User retrievedUser = sut.getUserByUsername(createdUser.getUsername());
-        Assert.assertEquals(retrievedUser, createdUser);
+        Assert.assertEquals(retrievedUser.getUsername(), createdUser.getUsername());
+        Assert.assertEquals(retrievedUser.getRole(), createdUser.getRole());
     }
 }

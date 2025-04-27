@@ -106,6 +106,13 @@ public class User {
       }
    }
 
+   public String getRole() {
+      if (authorities.isEmpty()) {
+         return null;
+      }
+      return authorities.iterator().next().getName();
+   }
+
    public String getName() {
       return name;
    }

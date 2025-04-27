@@ -12,26 +12,28 @@ import javax.validation.constraints.Pattern;
  */
 public class RegisterUserDto {
 
-    @NotEmpty
+    @NotEmpty(message = "Username is required.")
     private String username;
-    @NotEmpty
+    @NotEmpty(message = "Password is required.")
     private String password;
-    @NotEmpty
+    @NotEmpty(message = "Please confirm your password.")
     private String confirmPassword;
-    @NotEmpty
+    @NotEmpty(message = "Name is required.")
     private String name;
     private String address;
     private String city;
-    @NotEmpty
+    @NotEmpty(message = "State code is required.")
     @Pattern(regexp = "^(AL|AK|AR|AZ|CA|CO|CT|DC|DE|FL|GA|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NC|ND|NE|NH|NJ|NM|NV|NY|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VA|VT|WA|WI|WV|WY)$",
             message = "State code is invalid")
     private String stateCode;
-    @NotEmpty
-    @Pattern(regexp = "^[0-9][0-9][0-9][0-9][0-9]$",
+    @NotEmpty(message = "ZIP is required.")
+    @Pattern(regexp = "^[0-9]{5}$",
             message = "ZIP must be 5 digits")
     private String ZIP;
     @NotEmpty(message = "Please select a role for this user.")
     private String role;
+
+    public RegisterUserDto() {}
 
     public String getUsername() {
         return username;

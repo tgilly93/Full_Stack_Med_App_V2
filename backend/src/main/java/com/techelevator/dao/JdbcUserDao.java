@@ -12,11 +12,14 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.techelevator.model.User;
+import com.techelevator.model.RegisterUserDto;
 
 @Component
 public class JdbcUserDao implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -81,17 +84,17 @@ public class JdbcUserDao implements UserDao {
     @Override
     public User createUser(User newUser) {
         User user = null;
-        String insertUserSql = "INSERT INTO users (username,password_hash,role,name,address,city,state_code,zip) values (?,?,?,?,?,?,?,?) RETURNING user_id";
+        String insertUserSql = "INSERT INTO users (username, password_hash, role, name, address, city, state_code, zip) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING user_id";
         if (newUser.getPassword() == null) {
             throw new DaoException("User cannot be created with null password");
         }
         try {
-            String password_hash = new BCryptPasswordEncoder().encode(newUser.getPassword());
+            String password_hash = passwordEncoder.encode(newUser.getPassword());
 
-            int userId = jdbcTemplate.queryForObject(insertUserSql, int.class,
-                    newUser.getUsername(), password_hash, newUser.getAuthoritiesString(), newUser.getName(), newUser.getAddress(),
-                    newUser.getCity(), newUser.getStateCode(), newUser.getZIP());
-            user =  getUserById(userId);
+           int userId = jdbcTemplate.queryForObject(insertUserSql, int.class, newUser.getUsername(), password_hash, newUser.getAuthoritiesString(), newUser.getName(), newUser.getAddress(), newUser.getCity(), newUser.getStateCode(), newUser.getZIP());
+
+            user = getUserById(userId);
+
         }
         catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
