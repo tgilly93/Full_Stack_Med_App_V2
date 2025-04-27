@@ -3,6 +3,7 @@
 ## 🖥️ Frontend Issues
 
 <!-- FRONTEND-ISSUES-START -->
+- [#26](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/26) MyAppointments Component
 - [#25](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/25) Login Component
 - [#24](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/24) Register Component
 - [#23](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/23) Appointment Component
