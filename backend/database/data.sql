@@ -23,13 +23,13 @@ office_insert AS (
 ),
 patient_insert AS (
     INSERT INTO patient (user_id, patient_first_name, patient_last_name, patient_date_of_birth, patient_address, patient_city, patient_state, zip_code, patient_phone_number)
-    SELECT office_id, 'patient_test_fname', 'patient_test_lname', '1900-01-01', '123 test lane', 'Newark', 'DE', '19702', '555-000-5555'
+    SELECT user_id, 'patient_test_fname', 'patient_test_lname', '1900-01-01', '123 test lane', 'Newark', 'DE', '19702', '555-000-5555'
     FROM user_insert_patient
     RETURNING patient_id
 ),
 staff_insert AS (
     INSERT INTO staff (office_id, staff_first_name, staff_last_name, staff_address, staff_phone_number)
-    SELECT office_id, 'test_fname', 'test_lname', '456 Test Lane', '555-000-5555'
+    SELECT user_id, 'test_fname', 'test_lname', '456 Test Lane', '555-000-5555'
     FROM office_insert
     RETURNING staff_id
 ),
@@ -83,7 +83,7 @@ availability_insert_4 AS (
    INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available)
    SELECT '1000004441', office_id, '2024-10-09', 'Friday', '13:00', '14:00', 'true'
    FROM clinician_insert, office_insert
-)
+);
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------
