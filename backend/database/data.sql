@@ -10,7 +10,7 @@ WITH user_insert_clinician AS (
     RETURNING user_id
 ),
 user_insert_patient AS (
-    INSERT INTO users (username, password_hash, role, name, city, state_code, zip)
+    INSERT INTO users (username, password_hash, role, name, address, city, state_code, zip)
     VALUES
     ('patient_test', '$2y$10$LSUmYkcPkE7jIr/f/7nf4u5hLYPXDM3qTT3gOmZdoYLVS0OVyw.7S', 'ROLE_PATIENT', 'Patient Test', '123 test lane', 'Newark', 'DE', '19702')
     RETURNING user_id
@@ -29,7 +29,7 @@ patient_insert AS (
 ),
 staff_insert AS (
     INSERT INTO staff (office_id, staff_first_name, staff_last_name, staff_address, staff_phone_number)
-    SELECT user_id, 'test_fname', 'test_lname', '456 Test Lane', '555-000-5555'
+    SELECT office_id, 'test_fname', 'test_lname', '456 Test Lane', '555-000-5555'
     FROM office_insert
     RETURNING staff_id
 ),
@@ -37,16 +37,16 @@ clinician_insert AS (
     INSERT INTO clinician (user_id, npi_number, staff_id, primary_office, clinician_rate_per_hour)
     SELECT user_id, '1000004441', staff_id, office_id, '89.00'
     FROM user_insert_clinician, staff_insert, office_insert
-    RETURNING clinician_id
+    RETURNING user_id
 ),
 prescription_insert_1 AS (
     INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status)
-    SELECT patient_id, '1000004441', '1000004441', 'Treats depression, anxiety, obsessive-compulsive disorder (OCD), post-traumatic stress disorder (PTSD), and premenstrual dysphoric disorder (PMDD)', '22.98', 'Uninsured', 'Active'
+    SELECT 'Zoloft', patient_id, '1000004441', 'Treats depression, anxiety, obsessive-compulsive disorder (OCD), post-traumatic stress disorder (PTSD), and premenstrual dysphoric disorder (PMDD)', '22.98', 'Uninsured', 'Active'
     FROM patient_insert
 ),
 prescription_insert_2 AS (
     INSERT INTO prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status)
-    SELECT patient_id, '1000004441', '1000004441', 'Pain reliever', '22.98', 'Uninsured', 'Active'
+    SELECT 'Ibuprofen', patient_id, '1000004441', 'Pain reliever', '22.98', 'Uninsured', 'Active'
     FROM patient_insert
 ),
 appointment_insert_1 AS (
@@ -83,7 +83,8 @@ availability_insert_4 AS (
    INSERT INTO availability (npi_number, office_id, date, day_of_week, start_time, end_time, is_available)
    SELECT '1000004441', office_id, '2024-10-09', 'Friday', '13:00', '14:00', 'true'
    FROM clinician_insert, office_insert
-);
+)
+SELECT 'Data seeded successfully';
 
 ---------------------------------------------------------------------------------------------------
 ------------------------------------Views----------------------------------------------------------
