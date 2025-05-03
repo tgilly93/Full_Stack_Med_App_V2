@@ -6,7 +6,7 @@ import java.sql.Time;
 public class Appointment {
     private int appointmentId;
     private int patientId;
-    private int clinicianId;
+    private int npiNumber;
     private int officeId;
     private Date date;
     private Time startTime;
@@ -17,10 +17,10 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(int appointmentId, int patientId, int clinicianId, int officeId, Date date, Time startTime, Time endTime, String appointmentType, String appointmentStatus) {
+    public Appointment(int appointmentId, int patientId, int npiNumber, int officeId, Date date, Time startTime, Time endTime, String appointmentType, String appointmentStatus) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
-        this.clinicianId = clinicianId;
+        this.npiNumber = npiNumber;
         this.officeId = officeId;
         this.date = date;
         this.startTime = startTime;
@@ -45,12 +45,12 @@ public class Appointment {
         this.patientId = patientId;
     }
 
-    public int getClinicianId() {
-        return clinicianId;
+    public int getNpiNumber() {
+        return npiNumber;
     }
 
-    public void setClinicianId(int clinicianId) {
-        this.clinicianId = clinicianId;
+    public void setNpiNumber(int npiNumber) {
+        this.npiNumber = npiNumber;
     }
 
     public int getOfficeId() {
@@ -106,7 +106,7 @@ public class Appointment {
         return "Appointment{" +
                 "appointmentId=" + appointmentId +
                 ", patientId=" + patientId +
-                ", clinicianId=" + clinicianId +
+                ", npiNumber=" + npiNumber +
                 ", officeId=" + officeId +
                 ", date=" + date +
                 ", startTime=" + startTime +

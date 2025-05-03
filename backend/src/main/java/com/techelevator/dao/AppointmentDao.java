@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AppointmentDao {
     List<Appointment> getAllAppointments ();
-    List<Appointment> getAvailableAppointmentsByClinicianIdAndDate(int clinicianId, Date date);
+    List<Appointment> getAvailableAppointmentsByClinicianIdAndDate(int npiNumber, Date date);
     boolean addAppointment(Appointment appointment);
     boolean updateAppointment(Appointment appointment);
     boolean deleteAppointment(int appointmentId);
