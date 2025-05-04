@@ -1,13 +1,15 @@
 package com.techelevator.dao;
 
 import com.techelevator.model.Appointment;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 @Component
 public class JdbcAppointmentDao implements AppointmentDao {
@@ -18,39 +20,45 @@ public class JdbcAppointmentDao implements AppointmentDao {
     }
 
     @Override
-    public List<Appointment> getAllAppointments (){
-        String sql = "SELECT * FROM clinician_availabilty ORDER BY start_time";
+    public List<Appointment> getAllAppointments() {
+        String sql = "SELECT * FROM appointment ORDER BY start_time";
 
         List<Appointment> availableAppointments = new ArrayList<>();
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while (results.next()) {
-            availableAppointments.add(mapRowToAvailableAppointment(results));
+            availableAppointments.add(mapRowToAppointment(results));
         }
         return availableAppointments;
     }
 
     @Override
-    public List<Appointment> getAvailableAppointmentsByClinicianIdAndDate(int npiNumber, Date date) {
-        String sql = "SELECT * FROM clinician_availabilty WHERE npi_number = ? AND date = ? AND is_available = true ORDER BY start_time";
+    public List<Appointment> getAppointmentsByClinicianIdAndDate(int npiNumber, Date date) {
+        String sql = "SELECT * FROM appointment WHERE npi_number = ? AND date = ? ";
+
+        String dayOfWeek = date.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
         List<Appointment> availableAppointments = new ArrayList<>();
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, npiNumber, date);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, npiNumber, dayOfWeek);
         while (results.next()) {
-            availableAppointments.add(mapRowToAvailableAppointment(results));
+            availableAppointments.add(mapRowToAppointment(results));
         }
         return availableAppointments;
     }
 
     @Override
     public boolean addAppointment(Appointment appointment) {
-        String sql = "INSERT INTO scheduled_appointments(\"Date\", start_time, end_time, type, status, \"Doctor\", \"Patient\") VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO appointment(npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status)" + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return jdbcTemplate.update(sql,
-                appointment.getDate(),appointment.getStartTime(),appointment.getEndTime(),
-                appointment.getAppointmentType(),appointment.getAppointmentStatus(),appointment.getNpiNumber(),
-                appointment.getPatientId()) == 1;
+        int rowsAffected = jdbcTemplate.update(sql,
+                appointment.getNpiNumber(),
+                appointment.getPatientId(),
+                appointment.getDate(),
+                appointment.getStartTime(),
+                appointment.getEndTime(),
+                appointment.getAppointmentType(),
+                appointment.getAppointmentStatus());
 
-
+        return rowsAffected > 0;
     }
 
     @Override
@@ -58,17 +66,42 @@ public class JdbcAppointmentDao implements AppointmentDao {
         String sql = "UPDATE scheduled_appointments SET type = ?, status = ? WHERE \"Date\" = ? AND start_time = ? AND end_time = ? AND \"Doctor\" = ? AND \"Patient\" = ?";
 
         return jdbcTemplate.update(sql,
-                appointment.getAppointmentType(),appointment.getAppointmentStatus(),appointment.getDate(),appointment.getStartTime(),appointment.getEndTime(),
+                appointment.getAppointmentType(), appointment.getAppointmentStatus(), appointment.getDate(),
+                appointment.getStartTime(), appointment.getEndTime(),
                 getDoctorFullName(appointment.getNpiNumber()),
                 getPatientFullName(appointment.getPatientId())) == 1;
-
     }
 
     @Override
-    public boolean deleteAppointment(int npiNumber) {
-        String sql = "DELETE FROM scheduled_appointments WHERE npi_number = ?";
+    public boolean deleteAppointment(int appointmentId) {
+        String sql = "DELETE FROM appointment WHERE appointment_id = ?";
+        int rowsAffected = jdbcTemplate.update(sql, appointmentId);
 
-        return jdbcTemplate.update(sql, npiNumber) > 0;
+        return rowsAffected > 0;
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByPatientId(int patientId) {
+        String sql = "SELECT * FROM scheduled_appointments WHERE \"Patient\" = ?";
+
+        List<Appointment> appointments = new ArrayList<>();
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, patientId);
+        while (results.next()) {
+            appointments.add(mapRowToAppointment(results));
+        }
+        return appointments;
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByClinicianId(int npiNumber) {
+        String sql = "SELECT * FROM scheduled_appointments WHERE \"Doctor\" = ?";
+
+        List<Appointment> appointments = new ArrayList<>();
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, npiNumber);
+        while (results.next()) {
+            appointments.add(mapRowToAppointment(results));
+        }
+        return appointments;
     }
 
     private String getDoctorFullName(int npiNumber) {
@@ -76,26 +109,34 @@ public class JdbcAppointmentDao implements AppointmentDao {
                 "FROM clinician c " +
                 "JOIN staff s ON c.staff_id = s.staff_id " +
                 "WHERE c.npi_number = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, npiNumber);
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, npiNumber);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     private String getPatientFullName(int patientId) {
         String sql = "SELECT p.patient_first_name || ' ' || p.patient_last_name AS patient_name " +
                 "FROM patient p " +
                 "WHERE p.patient_id = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, patientId);
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, patientId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    private Appointment mapRowToAvailableAppointment(SqlRowSet rs) {
+    private Appointment mapRowToAppointment(SqlRowSet rs) {
         Appointment appointment = new Appointment();
+        appointment.setAppointmentId(rs.getInt("appointment_id"));
         appointment.setNpiNumber(rs.getInt("npi_number"));
+        appointment.setPatientId(rs.getInt("patient_id"));
         appointment.setDate(rs.getDate("date"));
         appointment.setStartTime(rs.getTime("start_time"));
         appointment.setEndTime(rs.getTime("end_time"));
-        appointment.setAppointmentType("Available Slot");
-        appointment.setAppointmentStatus("Available");
+        appointment.setAppointmentType(rs.getString("appointment_type"));
+        appointment.setAppointmentStatus(rs.getString("appointment_status"));
         return appointment;
     }
-
-
 }

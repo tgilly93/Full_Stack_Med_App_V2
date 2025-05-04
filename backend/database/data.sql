@@ -103,9 +103,10 @@ FROM
 
 CREATE VIEW clinician_availability AS
 SELECT
+    c.npi_number,
 	c.primary_office as Location,
 	s.staff_last_name as Clinician,
-	a.day_of_week AS Day_of_Week,
+	a.day_of_week AS day_of_week,
 	a.start_time,
 	a.end_time,
 	a.is_available

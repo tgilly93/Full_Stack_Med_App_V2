@@ -26,11 +26,6 @@ public class AppointmentController {
         return appointmentDao.getAllAppointments();
     }
 
-    @GetMapping("/available/{clinicianId}/date/{date}")
-    public List<Appointment> getAvailableAppointmentsByClinicianIdAndDate(@PathVariable int clinicianId, @PathVariable Date date) {
-        return appointmentDao.getAvailableAppointmentsByClinicianIdAndDate(clinicianId, date);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addAppointment(@RequestBody Appointment appointment) {
@@ -56,18 +51,18 @@ public class AppointmentController {
         }
     }
 
-//    @GetMapping("/patient/{patientId}")
-//    public List<Appointment> getAppointmentsByPatientId(@PathVariable int patientId) {
-//        return appointmentDao.getAppointmentsByPatientId(patientId);
-//    }
-//
-//    @GetMapping("/doctor/{clinicianId}/date/{date}")
-//    public List<Appointment> getAppointmentsByClinicianIdAndDate(@PathVariable int clinicianId, @PathVariable Date date) {
-//        return appointmentDao.getAppointmentsByClinicianIdAndDate(clinicianId, date);
-//    }
-//
-//    @GetMapping("/doctor/{clinicianId}")
-//    public List<Appointment> getAppointmentsByClinicianId(@PathVariable int clinicianId) {
-//        return appointmentDao.getAppointmentsByClinicianId(clinicianId);
-//    }
+   @GetMapping("/patient/{patientId}")
+   public List<Appointment> getAppointmentsByPatientId(@PathVariable int patientId) {
+       return appointmentDao.getAppointmentsByPatientId(patientId);
+   }
+
+   @GetMapping("/doctor/{clinicianId}/date/{date}")
+   public List<Appointment> getAppointmentsByClinicianIdAndDate(@PathVariable int npiNumber, @PathVariable Date date) {
+       return appointmentDao.getAppointmentsByClinicianIdAndDate(npiNumber, date);
+   }
+
+   @GetMapping("/doctor/{clinicianId}")
+   public List<Appointment> getAppointmentsByClinicianId(@PathVariable int npiNumber) {
+       return appointmentDao.getAppointmentsByClinicianId(npiNumber);
+   }
 }
