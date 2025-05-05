@@ -51,18 +51,18 @@ public class AppointmentController {
         }
     }
 
-   @GetMapping("/patient/{patientId}")
-   public List<Appointment> getAppointmentsByPatientId(@PathVariable int patientId) {
-       return appointmentDao.getAppointmentsByPatientId(patientId);
-   }
+    @GetMapping("/patient/{patientId}")
+    public List<Appointment> getAppointmentsByPatientId(@PathVariable int patientId) {
+        return appointmentDao.getAppointmentsByPatientId(patientId);
+    }
 
-   @GetMapping("/doctor/{clinicianId}/date/{date}")
-   public List<Appointment> getAppointmentsByClinicianIdAndDate(@PathVariable int npiNumber, @PathVariable Date date) {
-       return appointmentDao.getAppointmentsByClinicianIdAndDate(npiNumber, date);
-   }
+    @GetMapping("/doctor/{npiNumber}/date/{date}")
+    public List<Appointment> getAppointmentsByClinicianIdAndDate(@PathVariable int npiNumber, @PathVariable Date date) {
+        return appointmentDao.getAppointmentsByClinicianIdAndDate(npiNumber, date);
+    }
 
-   @GetMapping("/doctor/{clinicianId}")
-   public List<Appointment> getAppointmentsByClinicianId(@PathVariable int npiNumber) {
-       return appointmentDao.getAppointmentsByClinicianId(npiNumber);
-   }
+    @GetMapping("/doctor/{npiNumber}")
+    public List<Appointment> getAppointmentsByClinicianId(@PathVariable int npiNumber) {
+        return appointmentDao.getAppointmentsByClinicianId(npiNumber);
+    }
 }
