@@ -141,16 +141,18 @@ FROM
 
 CREATE VIEW scheduled_appointments AS
 SELECT
+    a.appointment_id AS appointment_id,
 	a.date as "Date",
 	TO_CHAR(a.date, 'Day') AS "Day_of_Week",
 	s.staff_last_name ||', ' || s.staff_first_name AS "Doctor",
+	a.npi_number as "NPI",
 	a.patient_id as "Patient",
 	p.patient_first_name || ' ' || p.patient_last_name AS "Patient Name",
 	sc.block_id as "Time Block",
 	sc.start_time,
 	sc.end_time,
-	a.appointment_type as Type,
-	a.appointment_status as Status
+	a.appointment_type as "Type",
+	a.appointment_status as "Status"
 FROM
 	appointment a
 	JOIN clinician c on c.npi_number = a.npi_number
@@ -167,19 +169,16 @@ BEGIN
         date = NEW."Date",
         start_time = NEW.start_time,
         end_time = NEW.end_time,
-        appointment_type = NEW.type,
-        appointment_status = NEW.status
-    WHERE date = NEW."Date"
-      AND start_time = NEW.start_time
-      AND end_time = NEW.end_time
-      AND patient_id = NEW."Patient";
+        appointment_type = NEW."Type",
+        appointment_status = NEW."Status"
+    WHERE appointment_id = NEW.appointment_id;
      -- Update the staff table
 
         UPDATE staff
     SET
         staff_last_name = split_part(NEW."Doctor", ', ', 1),
         staff_first_name = split_part(NEW."Doctor", ', ', 2)
-    WHERE staff_id = (SELECT staff_id FROM clinician WHERE npi_number = (SELECT npi_number FROM appointment WHERE date = NEW."Date" AND start_time = NEW.start_time));
+    WHERE staff_id = (SELECT staff_id FROM clinician WHERE npi_number = (SELECT npi_number FROM appointment WHERE appointment_id = NEW.appointment_id));
 
     RETURN NEW;
 END;

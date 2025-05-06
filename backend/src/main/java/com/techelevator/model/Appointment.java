@@ -2,6 +2,7 @@ package com.techelevator.model;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 
 public class Appointment {
     private int appointmentId;
@@ -9,22 +10,22 @@ public class Appointment {
     private int npiNumber;
     private int officeId;
     private Date date;
-    private Time startTime;
-    private Time endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private String appointmentType;
     private String appointmentStatus;
 
     public Appointment() {
     }
 
-    public Appointment(int appointmentId, int patientId, int npiNumber, int officeId, Date date, Time startTime, Time endTime, String appointmentType, String appointmentStatus) {
+    public Appointment(int appointmentId, int patientId, int npiNumber, int officeId, Date date, LocalTime startTime, LocalTime endTime, String appointmentType, String appointmentStatus) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.npiNumber = npiNumber;
         this.officeId = officeId;
         this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = (startTime);
+        this.endTime = (endTime);
         this.appointmentType = appointmentType;
         this.appointmentStatus = appointmentStatus;
     }
@@ -69,20 +70,20 @@ public class Appointment {
         this.date = date;
     }
 
-    public Time getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
     public void setStartTime(Time startTime) {
-        this.startTime = startTime;
+        this.startTime = startTime.toLocalTime();
     }
 
-    public Time getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
     public void setEndTime(Time endTime) {
-        this.endTime = endTime;
+        this.endTime = endTime.toLocalTime();
     }
 
     public String getAppointmentType() {
