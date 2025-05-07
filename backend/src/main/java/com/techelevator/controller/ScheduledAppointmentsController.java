@@ -57,9 +57,9 @@ public class ScheduledAppointmentsController {
         }
     }
 
-    @DeleteMapping
-    public void deleteScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
-        boolean success = scheduledAppointmentsDao.deleteScheduledAppointment(appointment);
+    @DeleteMapping("/{appointmentId}")
+    public void deleteScheduledAppointment(@PathVariable int appointmentId) {
+        boolean success = scheduledAppointmentsDao.deleteScheduledAppointment(appointmentId);
         if (!success) {
             throw new RuntimeException("Failed to delete scheduled appointment.");
         }

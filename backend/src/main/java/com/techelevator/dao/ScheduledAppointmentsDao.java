@@ -19,5 +19,5 @@ public interface ScheduledAppointmentsDao {
 
     boolean updateScheduledAppointment(ScheduledAppointments appointment);
 
-    boolean deleteScheduledAppointment(ScheduledAppointments appointment);
+    boolean deleteScheduledAppointment(int appointmentId);
 }

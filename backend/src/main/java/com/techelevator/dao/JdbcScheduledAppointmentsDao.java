@@ -96,13 +96,10 @@ public class JdbcScheduledAppointmentsDao implements ScheduledAppointmentsDao {
     }
 
     @Override
-    public boolean deleteScheduledAppointment(ScheduledAppointments appointment) {
-        String sql = "DELETE FROM scheduled_appointments WHERE \"Date\" = ? AND \"start_time\" = ? AND \"end_time\" = ? AND \"Patient\" = ?";
+    public boolean deleteScheduledAppointment(int appointmentId) {
+        String sql = "DELETE FROM scheduled_appointments WHERE appointment_id = ?";
         int rowsAffected = jdbcTemplate.update(sql,
-                appointment.getDate(),
-                appointment.getStartTime(),
-                appointment.getEndTime(),
-                appointment.getPatientId());
+                appointmentId);
         return rowsAffected > 0;
     }
 
