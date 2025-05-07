@@ -62,17 +62,29 @@ public class JdbcScheduledAppointmentsDao implements ScheduledAppointmentsDao {
     }
 
     @Override
-    public boolean updateScheduledAppointment(ScheduledAppointments appointment) {
+    public boolean addScheduledAppointment(ScheduledAppointments appointment) {
+        String sql = "INSERT INTO scheduled_appointments (\"Date\", \"start_time\", \"end_time\", \"Type\", \"Status\", \"Patient\", \"Doctor\") "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
+        int rowsAffected = jdbcTemplate.update(sql,
+                appointment.getDate(),
+                appointment.getStartTime(),
+                appointment.getEndTime(),
+                appointment.getType(),
+                appointment.getStatus(),
+                appointment.getPatientId(),
+                appointment.getDoctor());
+
+        return rowsAffected > 0;
+    }
+
+    @Override
+    public boolean updateScheduledAppointment(ScheduledAppointments appointment) {
         String sql = "UPDATE scheduled_appointments SET " +
                 "\"Date\" = ?, \"start_time\" = ?, \"end_time\" = ?, " +
                 "\"Type\" = ?, \"Status\" = ? " +
                 "WHERE appointment_id = ?";
 
-//        String sql = "UPDATE scheduled_appointments SET " +
-//                "\"Date\" = ?, \"start_time\" = ?, \"end_time\" = ?, " +
-//                "Type = ?, Status = ? " +
-//                "WHERE \"Date\" = ? AND \"start_time\" = ? AND \"end_time\" = ? AND \"Patient\" = ?";
         int rowsAffected = jdbcTemplate.update(sql,
                 appointment.getDate(),
                 appointment.getStartTime(),

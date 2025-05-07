@@ -192,33 +192,46 @@ EXECUTE FUNCTION update_scheduled_appointments();
 CREATE OR REPLACE FUNCTION insert_scheduled_appointments()
 RETURNS TRIGGER AS $$
 BEGIN
+    -- Insert into staff table if the doctor doesn't exist
+        INSERT INTO staff (staff_last_name, staff_first_name, office_id)
+        SELECT
+            TRIM(split_part(NEW."Doctor", ', ', 1)),
+            TRIM(split_part(NEW."Doctor", ', ', 2)),
+            COALESCE(
+                (
+                    SELECT c.primary_office
+                    FROM clinician c
+                    WHERE c.staff_id = (
+                            SELECT s.staff_id
+                            FROM staff s
+                            WHERE TRIM(s.staff_last_name) || ', ' || TRIM(s.staff_first_name) = TRIM(NEW."Doctor")
+                            )
+                            LIMIT 1
+                            ),
+                            1
+                )
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM staff
+            WHERE staff_last_name = TRIM(split_part(NEW."Doctor", ', ', 1))
+              AND staff_first_name = TRIM(split_part(NEW."Doctor", ', ', 2))
+        );
+
     -- Insert into appointment table
     INSERT INTO appointment (date, start_time, end_time, appointment_type, appointment_status, npi_number, patient_id)
     VALUES (
         NEW."Date",
         NEW.start_time,
         NEW.end_time,
-        NEW.type,
-        NEW.status,
+        NEW."Type",
+        NEW."Status",
         (SELECT npi_number 
          FROM clinician 
          WHERE staff_id = (SELECT staff_id 
                            FROM staff 
-                           WHERE staff_last_name || ', ' || staff_first_name = NEW."Doctor")
+                           WHERE TRIM(staff_last_name) || ', ' || TRIM(staff_first_name) = TRIM(NEW."Doctor"))
         ),
         NEW."Patient"
-    );
-
-    -- Insert into staff table if the doctor doesn't exist
-    INSERT INTO staff (staff_last_name, staff_first_name)
-    SELECT
-        split_part(NEW."Doctor", ', ', 1),
-        split_part(NEW."Doctor", ', ', 2)
-    WHERE NOT EXISTS (
-        SELECT 1
-        FROM staff
-        WHERE staff_last_name = split_part(NEW."Doctor", ', ', 1)
-          AND staff_first_name = split_part(NEW."Doctor", ', ', 2)
     );
 
     RETURN NEW;

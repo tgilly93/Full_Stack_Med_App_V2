@@ -40,11 +40,20 @@ public class ScheduledAppointmentsController {
         return scheduledAppointmentsDao.getScheduledAppointmentsByDate(localDate);
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
+        boolean success = scheduledAppointmentsDao.addScheduledAppointment(appointment);
+        if (!success) {
+            throw new RuntimeException("Failed to add scheduled appointment.");
+        }
+    }
+
     @PutMapping
     public void updateScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
         boolean success = scheduledAppointmentsDao.updateScheduledAppointment(appointment);
         if (!success) {
-            throw new RuntimeException("Failed to update scheduled appointment");
+            throw new RuntimeException("Failed to update scheduled appointment.");
         }
     }
 
@@ -52,7 +61,7 @@ public class ScheduledAppointmentsController {
     public void deleteScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
         boolean success = scheduledAppointmentsDao.deleteScheduledAppointment(appointment);
         if (!success) {
-            throw new RuntimeException("Failed to delete scheduled appointment");
+            throw new RuntimeException("Failed to delete scheduled appointment.");
         }
     }
 }

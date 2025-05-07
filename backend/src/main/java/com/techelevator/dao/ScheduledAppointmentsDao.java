@@ -15,6 +15,8 @@ public interface ScheduledAppointmentsDao {
 
     List<ScheduledAppointments> getScheduledAppointmentsByDate(LocalDate date);
 
+    boolean addScheduledAppointment(ScheduledAppointments appointment);
+
     boolean updateScheduledAppointment(ScheduledAppointments appointment);
 
     boolean deleteScheduledAppointment(ScheduledAppointments appointment);

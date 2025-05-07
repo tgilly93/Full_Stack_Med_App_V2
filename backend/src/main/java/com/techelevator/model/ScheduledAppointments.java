@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ScheduledAppointments {
-    private int appointmentId;       // ← NEW field
+    private int appointmentId;
     private LocalDate date;
     private String dayOfWeek;
     private String doctor;
@@ -19,12 +19,13 @@ public class ScheduledAppointments {
     private String type;
     private String status;
 
-    public ScheduledAppointments() {}
+    public ScheduledAppointments() {
+    }
 
     public ScheduledAppointments(int appointmentId, LocalDate date, String dayOfWeek, String doctor,
-                                 int npiNumber, int patientId, String patientName,
-                                 int timeBlock, LocalTime startTime, LocalTime endTime,
-                                 String type, String status) {
+            int npiNumber, int patientId, String patientName,
+            int timeBlock, LocalTime startTime, LocalTime endTime,
+            String type, String status) {
         this.appointmentId = appointmentId;
         this.date = date;
         this.dayOfWeek = dayOfWeek;
@@ -38,7 +39,7 @@ public class ScheduledAppointments {
         this.type = type;
         this.status = status;
     }
-
+    
     public int getAppointmentId() {
         return appointmentId;
     }
@@ -46,15 +47,17 @@ public class ScheduledAppointments {
     public void setAppointmentId(int appointmentId) {
         this.appointmentId = appointmentId;
     }
+
     @JsonProperty("Date")
     public LocalDate getDate() {
         return date;
     }
+
     @JsonProperty("Date")
     public void setDate(LocalDate date) {
         this.date = date;
     }
-
+    
     public String getDayOfWeek() {
         return dayOfWeek;
     }
@@ -63,10 +66,12 @@ public class ScheduledAppointments {
         this.dayOfWeek = dayOfWeek;
     }
 
+    @JsonProperty("Doctor")
     public String getDoctor() {
         return doctor;
     }
 
+    @JsonProperty("Doctor")
     public void setDoctor(String doctor) {
         this.doctor = doctor;
     }
@@ -79,10 +84,12 @@ public class ScheduledAppointments {
         this.npiNumber = npiNumber;
     }
 
+    @JsonProperty("Patient")
     public int getPatientId() {
         return patientId;
     }
 
+    @JsonProperty("Patient")
     public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
@@ -102,22 +109,27 @@ public class ScheduledAppointments {
     public void setTimeBlock(int timeBlock) {
         this.timeBlock = timeBlock;
     }
+
     @JsonProperty("start_time")
     public LocalTime getStartTime() {
         return startTime;
     }
+
     @JsonProperty("start_time")
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
+
     @JsonProperty("end_time")
     public LocalTime getEndTime() {
         return endTime;
     }
+
     @JsonProperty("end_time")
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
+
     @JsonProperty("Type")
     public String getType() {
         return type;
@@ -126,11 +138,12 @@ public class ScheduledAppointments {
     public void setType(String type) {
         this.type = type;
     }
+
     @JsonProperty("Status")
     public String getStatus() {
         return status;
     }
-    
+
     public void setStatus(String status) {
         this.status = status;
     }
