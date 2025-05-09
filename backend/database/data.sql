@@ -334,7 +334,8 @@ SELECT
 	sc.start_time,
 	sc.end_time,
 	a.appointment_type as Type,
-	a.appointment_status as Status
+	a.appointment_status as Status,
+	a.appointment_id AS appointment_id
 FROM
 	appointment a
 	JOIN clinician c on c.npi_number = a.npi_number
@@ -354,7 +355,8 @@ RETURNS TABLE (
     start_time TIME,
     end_time TIME,
     Type varchar(50),
-    Status varchar(50)
+    Status varchar(50),
+    appointment_id bigint
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -368,7 +370,8 @@ BEGIN
         sc.start_time,
         sc.end_time,
         a.appointment_type::varchar(50) AS Type,
-        a.appointment_status::varchar(50) AS Status
+        a.appointment_status::varchar(50) AS Status,
+        a.appointment_id::bigint AS appointment_id
     FROM
         appointment a
     JOIN clinician c ON c.npi_number = a.npi_number
@@ -392,7 +395,8 @@ SELECT
     	sc.start_time,
     	sc.end_time,
     	a.appointment_type AS Type,
-    	a.appointment_status AS Status
+    	a.appointment_status AS Status,
+    	a.appointment_id AS appointment_id
 FROM
     appointment a
 	JOIN clinician c ON c.npi_number = a.npi_number
@@ -411,7 +415,8 @@ GROUP BY
     	sc.start_time, 
     	sc.end_time, 
     	a.appointment_type, 
-    	a.appointment_status
+    	a.appointment_status,
+    	a.appointment_id
 ORDER BY
     	"Week_Start_Date", 
     	"Doctor", 
@@ -430,7 +435,8 @@ SELECT
     	sc.start_time,
     	sc.end_time,
     	a.appointment_type AS Type,
-    	a.appointment_status AS Status
+    	a.appointment_status AS Status,
+    	a.appointment_id AS appointment_id
 FROM
     appointment a
 	JOIN clinician c ON c.npi_number = a.npi_number
@@ -449,7 +455,8 @@ GROUP BY
     	sc.start_time, 
     	sc.end_time, 
     	a.appointment_type, 
-    	a.appointment_status
+    	a.appointment_status,
+    	a.appointment_id
 ORDER BY
     	"Month_Start_Date", 
     	"Doctor", 
