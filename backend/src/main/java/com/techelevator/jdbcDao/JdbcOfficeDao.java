@@ -1,4 +1,4 @@
-package com.techelevator.dao;
+package com.techelevator.jdbcDao;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.techelevator.dao.OfficeDao;
 import com.techelevator.model.Office;
 @Component
 public class JdbcOfficeDao implements OfficeDao {

@@ -11,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.techelevator.dao.UserDao;
+import com.techelevator.dto.LoginDto;
+import com.techelevator.dto.LoginResponseDto;
+import com.techelevator.dto.RegisterUserDto;
 import com.techelevator.security.jwt.TokenProvider;
 import org.springframework.web.server.ResponseStatusException;
 
