@@ -1,20 +1,16 @@
-package com.techelevator.dao;
+package com.techelevator.jdbcDao;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.techelevator.dao.AgendaDao;
 import com.techelevator.dto.DailyAgendaDto;
 import com.techelevator.dto.WeeklyAgendaDto;
 import com.techelevator.dto.MonthlyAgendaDto;
-import com.techelevator.model.Agenda;
 
 @Component
 public class JbdcAgendaDao implements AgendaDao {

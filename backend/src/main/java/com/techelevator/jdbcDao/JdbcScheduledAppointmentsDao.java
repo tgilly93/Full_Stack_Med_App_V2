@@ -1,9 +1,10 @@
-package com.techelevator.dao;
+package com.techelevator.jdbcDao;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.techelevator.dao.ScheduledAppointmentsDao;
 import com.techelevator.model.ScheduledAppointments;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;

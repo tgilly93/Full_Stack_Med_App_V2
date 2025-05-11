@@ -1,5 +1,6 @@
-package com.techelevator.dao;
+package com.techelevator.jdbcDao;
 
+import com.techelevator.dao.AppointmentDao;
 import com.techelevator.model.Appointment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;

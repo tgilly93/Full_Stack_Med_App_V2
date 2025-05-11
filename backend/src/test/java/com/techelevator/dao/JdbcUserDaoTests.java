@@ -1,7 +1,8 @@
 package com.techelevator.dao;
 
+import com.techelevator.dto.RegisterUserDto;
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.RegisterUserDto;
+import com.techelevator.jdbcDao.JdbcUserDao;
 import com.techelevator.model.User;
 import org.junit.Assert;
 import org.junit.Before;
