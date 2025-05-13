@@ -12,7 +12,7 @@ public class PatientContactDto {
     private String patientState;
 
     private String zipCode;
-    
+
     private String patientPhoneNumber;
 
     public PatientContactDto() {
