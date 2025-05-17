@@ -1,55 +1,37 @@
 package com.techelevator.model;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
 public class Prescription {
     private int prescriptionId;
-    private int patientId;
-    private int doctorId;
     private String prescriptionName;
-    private String prescriptionDescription;
-    private Double prescriptionCost;
+    private int patientId;
+    private int npiNumber;
+    private String prescriptionDetails;
+    private BigDecimal prescriptionCost;
     private String insuranceCoverage;
     private String prescriptionStatus;
-    private List<Prescription> prescriptions;
+    
+    public Prescription() {
 
-    public Prescription(int prescriptionId, int patientId, int doctorId, String prescriptionName, String prescriptionDescription, Double prescriptionCost, String insuranceCoverage, String prescriptionStatus) {
+    }
+
+    public Prescription(int prescriptionId, String prescriptionName, int patientId, int npiNumber, String prescriptionDetails, BigDecimal prescriptionCost, String insuranceCoverage, String prescriptionStatus) {
         this.prescriptionId = prescriptionId;
-        this.patientId = patientId;
-        this.doctorId = doctorId;
         this.prescriptionName = prescriptionName;
-        this.prescriptionDescription = prescriptionDescription;
+        this.patientId = patientId;
+        this.npiNumber = npiNumber;
+        this.prescriptionDetails =prescriptionDetails;
         this.prescriptionCost = prescriptionCost;
         this.insuranceCoverage = insuranceCoverage;
         this.prescriptionStatus = prescriptionStatus;
     }
 
-    public Prescription() {
-
-    }
-
-    public int  getPrescriptionId() {
+    public int getPrescriptionId() {
         return prescriptionId;
     }
 
     public void setPrescriptionId(int prescriptionId) {
         this.prescriptionId = prescriptionId;
-    }
-
-    public int getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
-    }
-
-    public int getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
     }
 
     public String getPrescriptionName() {
@@ -60,19 +42,35 @@ public class Prescription {
         this.prescriptionName = prescriptionName;
     }
 
-    public String getPrescriptionDescription() {
-        return prescriptionDescription;
+    public int getPatientId() {
+        return patientId;
     }
 
-    public void setPrescriptionDescription(String prescriptionDescription) {
-        this.prescriptionDescription = prescriptionDescription;
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
     }
 
-    public Double getPrescriptionCost() {
+    public int getNpiNumber() {
+        return npiNumber;
+    }
+
+    public void setNpiNumber(int npiNumber) {
+        this.npiNumber = npiNumber;
+    }
+
+    public String getPrescriptionDetails() {
+        return prescriptionDetails;
+    }
+
+    public void setPrescriptionDetails(String prescriptionDetails) {
+        this.prescriptionDetails = prescriptionDetails;
+    }
+
+    public BigDecimal getPrescriptionCost() {
         return prescriptionCost;
     }
 
-    public void setPrescriptionCost(Double prescriptionCost) {
+    public void setPrescriptionCost(BigDecimal prescriptionCost) {
         this.prescriptionCost = prescriptionCost;
     }
 
@@ -92,27 +90,17 @@ public class Prescription {
         this.prescriptionStatus = prescriptionStatus;
     }
 
-    public List<Prescription> getPrescriptions() {
-        List<Prescription> prescriptions = new ArrayList<>();
-        return prescriptions;
-    }
-
-    public void setPrescriptions(List<Prescription> prescriptions) {
-        this.prescriptions = prescriptions;
-    }
-
-
     @Override
     public String toString() {
         return "Prescription{" +
                 "prescriptionId=" + prescriptionId +
-                ", patientId=" + patientId + '\'' +
-                ", doctorId=" + doctorId + '\'' +
-                ", prescriptionName=" + prescriptionName + '\'' +
-                ", prescriptionDescription=" + prescriptionDescription + '\'' +
-                ", prescriptionCost=" + prescriptionCost + '\'' +
-                ", insuranceCoverage=" + insuranceCoverage + '\'' +
-                ", prescriptionStatus=" + prescriptionStatus + '\'' +
+                ", prescriptionName='" + prescriptionName + '\'' +
+                ", patientId=" + patientId +
+                ", npiNumber=" + npiNumber +
+                ", prescriptionDetails='" + prescriptionDetails + '\'' +
+                ", prescriptionCost=" + prescriptionCost +
+                ", insuranceCoverage='" + insuranceCoverage + '\'' +
+                ", prescriptionStatus='" + prescriptionStatus + '\'' +
                 '}';
     }
 }

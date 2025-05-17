@@ -7,64 +7,42 @@ import org.springframework.web.bind.annotation.*;
 
 import com.techelevator.dao.PrescriptionDao;
 import com.techelevator.model.Prescription;
+import com.techelevator.service.PrescriptionService;
 
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/prescriptions")
 public class PrescriptionController {
-    @Autowired
-    private PrescriptionDao prescriptionDao;
-    
-        @RequestMapping(path = "/{prescriptionId}", method = RequestMethod.GET)
-        public Prescription getPrescriptionById(@PathVariable int prescriptionId) {
-            return prescriptionDao.getPrescriptionById(prescriptionId);
-        }
-    
-        @RequestMapping(path = "/patient/{patientId}", method = RequestMethod.GET)
-        public Prescription getPrescriptionByPatientId(@RequestParam int patientId) {
-            return prescriptionDao.getPrescriptionByPatientId(patientId);
-        }
-    
-        @RequestMapping(path = "/doctor/{doctorId}", method = RequestMethod.GET)
-        public Prescription getPrescriptionByDoctorId(@RequestParam int doctorId) {
-            return prescriptionDao.getPrescriptionByDoctorId(doctorId);
-        }
-    
-        @RequestMapping(path = "/{prescriptionId}", method = RequestMethod.PUT)
-        public boolean updatePrescription(@RequestParam Prescription prescription) {
-            return prescriptionDao.updatePrescription(prescription);
-        }
-    
-        @RequestMapping(path = "/add", method = RequestMethod.POST)
-        public boolean addPrescription(@RequestParam Prescription prescription) {
-            return prescriptionDao.addPrescription(prescription);
-        }
-    
-        @RequestMapping(path = "/{prescriptionId}", method = RequestMethod.DELETE)
-        public boolean deletePrescription(@RequestParam int prescriptionId) {
-            return prescriptionDao.deletePrescription(prescriptionId);
-        }
-    
-        @RequestMapping(path = "/patient/{patientId}", method = RequestMethod.DELETE)
-        public boolean deletePrescriptionByPatientId(@RequestParam int patientId) {
-            return prescriptionDao.deletePrescriptionByPatientId(patientId);
-        }
+    private final PrescriptionService prescriptionService;
 
-        @RequestMapping(path = "patient/{patientId}/prescriptions", method=RequestMethod.GET)
-        public List<Prescription> getAllPrescriptionsByPatientId(@PathVariable int patientId) {
-            return prescriptionDao.getAllPrescriptionsByPatientId(patientId);
-        }
+    public PrescriptionController(PrescriptionService prescriptionService) {
+        this.prescriptionService = prescriptionService;
+    }
 
-        @RequestMapping(path = "doctor/{doctorId}/prescriptions", method=RequestMethod.GET)
-        public List<Prescription> getAllPrescriptionsByDoctorId(@PathVariable int doctorId) {
-            return prescriptionDao.getAllPrescriptionsByDoctorId(doctorId);
-        }
-        
-        @RequestMapping(path = "patient/{patientId}/status/{prescriptionStatus}", method=RequestMethod.GET)
-        public List<Prescription> getPatientPrescriptionByStatus(@PathVariable int patientId, @PathVariable String prescriptionStatus) {
-            return prescriptionDao.getPatientPrescriptionByStatus(patientId, prescriptionStatus);
-        }
+    @PostMapping
+    public boolean addPrescription(@RequestBody Prescription prescription) {
+        return prescriptionService.addPrescription(prescription);
+    }
 
-    
+    @GetMapping
+    public List<Prescription> getAllPrescriptions() {
+        return prescriptionService.getAllPrescriptions();
+    }
+
+    @GetMapping("/patient/{patient_id}")
+    public List<Prescription> getPrescriptionsByPatientId(@PathVariable int patient_id) {
+        return prescriptionService.getPrescriptionsByPatientId(patient_id);
+    }
+
+    @PutMapping("/{prescriptionId}")
+    public boolean updatePrescription(@PathVariable int prescriptionId, @RequestBody Prescription prescription) {
+        prescription.setPrescriptionId(prescriptionId);
+        return prescriptionService.updatePrescription(prescription);
+    }
+
+    @DeleteMapping("/{prescriptionId}")
+    public boolean deletePrescription(@PathVariable int prescriptionId) {
+        return prescriptionService.deletePrescription(prescriptionId);
+    }
 }
