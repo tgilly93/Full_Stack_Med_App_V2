@@ -47,8 +47,8 @@ public class AuthenticationController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenProvider.createToken(authentication, false);
 
-            User user = userDao.getUserByUsername(loginDto.getUsername());
-            return new LoginResponseDto(jwt, user);
+            Users users = userDao.getUserByUsername(loginDto.getUsername());
+            return new LoginResponseDto(jwt, users);
         }
         catch (DaoException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "DAO error - " + e.getMessage());
@@ -57,15 +57,15 @@ public class AuthenticationController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public User register(@Valid @RequestBody RegisterUserDto newUser) {
+    public Users register(@Valid @RequestBody RegisterUserDto newUser) {
         try {
             if (userDao.getUserByUsername(newUser.getUsername()) != null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists.");
             } else {
-                User user = userDao.createUser(
-                        new User(newUser.getUsername(),newUser.getPassword(), newUser.getRole(), newUser.getName(), newUser.getAddress(), newUser.getCity(), newUser.getStateCode(), newUser.getZIP())
+                Users users = userDao.createUser(
+                        new Users(newUser.getUsername(),newUser.getPassword(), newUser.getRole(), newUser.getName(), newUser.getAddress(), newUser.getCity(), newUser.getStateCode(), newUser.getZIP())
                 );
-                return user;
+                return users;
             }
         }
         catch (DaoException e) {
