@@ -1,15 +1,20 @@
 package com.techelevator.dao;
 
-import com.techelevator.model.User;
+import com.techelevator.model.Users;
+
 import java.util.List;
 
 public interface UserDao {
 
-    List<User> getUsers();
+    List<Users> getAllUsers();
 
-    User getUserById(int userId);
+    Users getUserByUserId(int userId);
 
-    User getUserByUsername(String username);
+    Users getUserByUsername(String username);
 
-    User createUser(User newUser);
+    Users createUser(Users user);
+
+    boolean updateUser(Users user);
+
+    boolean deleteUser(int userId);
 }

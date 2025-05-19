@@ -3,7 +3,7 @@ package com.techelevator.dao;
 import com.techelevator.dto.RegisterUserDto;
 import com.techelevator.exception.DaoException;
 import com.techelevator.jdbcDao.JdbcUserDao;
-import com.techelevator.model.User;
+import com.techelevator.model.Users;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-public class JdbcUserDaoTests extends BaseDaoTests {
-    protected static final User USER_1 = new User(1, "user1", "user1", "ROLE_USER", "User One", "123 Main St", "Newark", "DE", "19702");
-    protected static final User USER_2 = new User(2, "user2", "user2", "ROLE_USER", "User Two", "456 Oak Rd", "Newark", "DE", "19702");
-    private static final User USER_3 = new User(3, "user3", "user3", "ROLE_USER", "User Three", "789 Pine St", "Newark", "DE", "19702");
+public class JdbcUsersDaoTests extends BaseDaoTests {
+    protected static final Users USERS_1 = new Users(1, "user1", "user1", "ROLE_USER", "User One", "123 Main St", "Newark", "DE", "19702");
+    protected static final Users USERS_2 = new Users(2, "user2", "user2", "ROLE_USER", "User Two", "456 Oak Rd", "Newark", "DE", "19702");
+    private static final Users USERS_3 = new Users(3, "user3", "user3", "ROLE_USER", "User Three", "789 Pine St", "Newark", "DE", "19702");
 
     private JdbcUserDao sut;
 
@@ -25,17 +25,17 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         sut = new JdbcUserDao(jdbcTemplate);
     }
 
-    private User mapRegisterUserDtoToUser(RegisterUserDto dto) {
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
-        user.setAuthorities(dto.getRole());
-        user.setName("");
-        user.setAddress("");
-        user.setCity("");
-        user.setStateCode("");
-        user.setZIP("");
-        return user;
+    private Users mapRegisterUserDtoToUser(RegisterUserDto dto) {
+        Users users = new Users();
+        users.setUsername(dto.getUsername());
+        users.setPasswordHash(dto.getPassword());
+        users.setRole(dto.getRole());
+        users.setName("");
+        users.setAddress("");
+        users.setCity("");
+        users.setStateCode("");
+        users.setZip("");
+        return users;
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -50,41 +50,41 @@ public class JdbcUserDaoTests extends BaseDaoTests {
 
     @Test
     public void getUserByUsername_given_valid_user_returns_user() {
-        User actualUser = sut.getUserByUsername(USER_1.getUsername());
+        Users actualUsers = sut.getUserByUsername(USERS_1.getUsername());
 
-        Assert.assertEquals(USER_1, actualUser);
+        Assert.assertEquals(USERS_1, actualUsers);
     }
 
     @Test
     public void getUserById_given_invalid_user_id_returns_null() {
-        User actualUser = sut.getUserById(-1);
+        Users actualUsers = sut.getUserByUserId(-1);
 
-        Assert.assertNull(actualUser);
+        Assert.assertNull(actualUsers);
     }
 
     @Test
     public void getUserById_given_valid_user_id_returns_user() {
-        User actualUser = sut.getUserById(USER_1.getId());
+        Users actualUsers = sut.getUserByUserId(USERS_1.getUserId());
 
-        Assert.assertEquals(USER_1, actualUser);
+        Assert.assertEquals(USERS_1, actualUsers);
     }
 
     @Test
     public void getUsers_returns_all_users() {
-        List<User> users = sut.getUsers();
+        List<Users> users = sut.getAllUsers();
 
         Assert.assertNotNull(users);
         Assert.assertEquals(3, users.size());
-        Assert.assertEquals(USER_1, users.get(0));
-        Assert.assertEquals(USER_2, users.get(1));
-        Assert.assertEquals(USER_3, users.get(2));
+        Assert.assertEquals(USERS_1, users.get(0));
+        Assert.assertEquals(USERS_2, users.get(1));
+        Assert.assertEquals(USERS_3, users.get(2));
     }
 
     @Test(expected = DaoException.class)
     public void createUser_with_null_username() {
         RegisterUserDto registerUserDto = new RegisterUserDto();
         registerUserDto.setUsername(null);
-        registerUserDto.setPassword(USER_3.getPassword());
+        registerUserDto.setPassword(USERS_3.getPasswordHash());
         registerUserDto.setRole("ROLE_USER");
         sut.createUser(mapRegisterUserDtoToUser(registerUserDto));
     }
@@ -92,8 +92,8 @@ public class JdbcUserDaoTests extends BaseDaoTests {
     @Test(expected = DaoException.class)
     public void createUser_with_existing_username() {
         RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_1.getUsername());
-        registerUserDto.setPassword(USER_3.getPassword());
+        registerUserDto.setUsername(USERS_1.getUsername());
+        registerUserDto.setPassword(USERS_3.getPasswordHash());
         registerUserDto.setRole("ROLE_USER");
         sut.createUser(mapRegisterUserDtoToUser(registerUserDto));
     }
@@ -101,7 +101,7 @@ public class JdbcUserDaoTests extends BaseDaoTests {
     @Test(expected = IllegalArgumentException.class)
     public void createUser_with_null_password() {
         RegisterUserDto registerUserDto = new RegisterUserDto();
-        registerUserDto.setUsername(USER_3.getUsername());
+        registerUserDto.setUsername(USERS_3.getUsername());
         registerUserDto.setPassword(null);
         registerUserDto.setRole("ROLE_USER");
         sut.createUser(mapRegisterUserDtoToUser(registerUserDto));
@@ -109,13 +109,13 @@ public class JdbcUserDaoTests extends BaseDaoTests {
 
     @Test
     public void createUser_creates_a_user() {
-        User user = new User(0, "newuser", "password", "ROLE_USER", "New User", "123 Example St", "Newark", "DE", "19702");
-        User createdUser = sut.createUser(user);
+        Users users = new Users(0, "newuser", "password", "ROLE_USER", "New User", "123 Example St", "Newark", "DE", "19702");
+        Users createdUsers = sut.createUser(users);
 
-        Assert.assertNotNull(createdUser);
+        Assert.assertNotNull(createdUsers);
 
-        User retrievedUser = sut.getUserByUsername(createdUser.getUsername());
-        Assert.assertEquals(retrievedUser.getUsername(), createdUser.getUsername());
-        Assert.assertEquals(retrievedUser.getRole(), createdUser.getRole());
+        Users retrievedUsers = sut.getUserByUsername(createdUsers.getUsername());
+        Assert.assertEquals(retrievedUsers.getUsername(), createdUsers.getUsername());
+        Assert.assertEquals(retrievedUsers.getRole(), createdUsers.getRole());
     }
 }

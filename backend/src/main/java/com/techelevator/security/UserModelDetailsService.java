@@ -1,8 +1,7 @@
 package com.techelevator.security;
 
 import com.techelevator.dao.UserDao;
-import com.techelevator.model.Authority;
-import com.techelevator.model.User;
+import com.techelevator.model.Users;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Authenticate a user from the database.
@@ -35,20 +32,14 @@ public class UserModelDetailsService implements UserDetailsService {
         return createSpringSecurityUser(login, userDao.getUserByUsername(login));
     }
 
-    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String login, User user) {
-        if (!user.isActivated()) {
-            throw new UserNotActivatedException("User " + login + " was not activated");
-        }
+    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String login, Users users) {
+        List<GrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority(users.getRole()));
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        Set<Authority> userAuthorities = user.getAuthorities();
-        for (Authority authority : userAuthorities) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
-        }
-
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(),
-                grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(
+            users.getUsername(),
+            users.getPasswordHash(),
+            grantedAuthorities
+        );
     }
 }
 
