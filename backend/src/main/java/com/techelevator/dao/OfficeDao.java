@@ -2,10 +2,17 @@ package com.techelevator.dao;
 
 import com.techelevator.model.Office;
 
-import java.text.ParseException;
+import java.util.List;
 
 public interface OfficeDao {
+    List<Office> getAllOffices();
+
     Office getOfficeById(int officeId);
-    boolean updateOffice(Office office) throws ParseException;
+
+    Office createOffice(Office office);
+
+    boolean updateOffice(Office office);
+
+    boolean deleteOffice(int officeId);
 }
 

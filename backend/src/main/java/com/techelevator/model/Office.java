@@ -1,7 +1,6 @@
 package com.techelevator.model;
 
-import java.util.List;
-
+import java.time.LocalTime;
 public class Office {
     private int officeId;
     private String officeName;
@@ -10,12 +9,14 @@ public class Office {
     private String officeCity;
     private String state;
     private String zipCode;
-    private String officeOpen;
-    private String officeClose;
-    private List<String> doctors;
-    private double costPerHour;
+    private LocalTime officeOpen;
+    private LocalTime officeClose;
 
-    public Office(int officeId, String officeName, String officePhoneNumber, String officeAddress, String officeCity, String state, String zipCode, String officeOpen, String officeClose) {
+    public Office() {
+
+    }
+
+    public Office(int officeId, String officeName, String officePhoneNumber, String officeAddress, String officeCity, String state, String zipCode, LocalTime officeOpen, LocalTime officeClose) {
         this.officeId = officeId;
         this.officeName = officeName;
         this.officePhoneNumber = officePhoneNumber;
@@ -25,9 +26,6 @@ public class Office {
         this.zipCode = zipCode;
         this.officeOpen = officeOpen;
         this.officeClose = officeClose;
-    }
-    public Office() {
-
     }
 
     public int getOfficeId() {
@@ -86,36 +84,20 @@ public class Office {
         this.zipCode = zipCode;
     }
 
-    public String getOfficeOpen() {
+    public LocalTime getOfficeOpen() {
         return officeOpen;
     }
 
-    public void setOfficeOpen(String officeOpen) {
+    public void setOfficeOpen(LocalTime officeOpen) {
         this.officeOpen = officeOpen;
     }
 
-    public String getOfficeClose() {
+    public LocalTime getOfficeClose() {
         return officeClose;
     }
 
-    public void setOfficeClose(String officeClose) {
+    public void setOfficeClose(LocalTime officeClose) {
         this.officeClose = officeClose;
-    }
-
-    public List<String> getDoctors() {
-        return doctors;
-    }
-
-    public void setDoctors(List<String> doctors) {
-        this.doctors = doctors;
-    }
-
-    public double getCostPerHour() {
-        return costPerHour;
-    }
-
-    public void setCostPerHour(double costPerHour) {
-        this.costPerHour = costPerHour;
     }
 
     @Override
@@ -128,10 +110,8 @@ public class Office {
                 ", officeCity='" + officeCity + '\'' +
                 ", state='" + state + '\'' +
                 ", zipCode='" + zipCode + '\'' +
-                ", officeOpen='" + officeOpen + '\'' +
-                ", officeClose='" + officeClose + '\'' +
-                ", doctors=" + doctors +
-                ", costPerHour=" + costPerHour +
+                ", officeOpen=" + officeOpen +
+                ", officeClose=" + officeClose +
                 '}';
     }
 }

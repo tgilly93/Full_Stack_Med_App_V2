@@ -1,52 +1,47 @@
 package com.techelevator.controller;
 
-import com.techelevator.dao.OfficeDao;
 import com.techelevator.model.Office;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.techelevator.service.OfficeService;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@CrossOrigin //allows app to talk to API - MP
+@CrossOrigin 
 @RequestMapping("/api/offices")
 public class OfficeController {
-    @Autowired
-    private OfficeDao officeDao;
+    private final OfficeService officeService;
 
+    public OfficeController(OfficeService officeService) {
+        this.officeService = officeService;
+    }
 
+    @GetMapping
+    public List<Office> getAllOffices() {
+        return officeService.getAllOffices();
+    }
+    
     @GetMapping("/{officeId}")
     public Office getOfficeById(@PathVariable int officeId) {
-        return officeDao.getOfficeById(officeId);
+        return officeService.getOfficeById(officeId);
     }
-//    // Get all offices
-//    @GetMapping
-//    public List<Office> getAllOffices() {
-//        return officeDao.getAllOffices();
-//    }
-//
-//    // Update an existing office (restricted to authorized roles)
-//    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Office createOffice(@RequestBody Office office) {
+        return officeService.createOffice(office);
+    }
+
     @PutMapping("/{officeId}")
-    public HttpStatus updateOffice(@PathVariable int officeId, @RequestBody Office office) {
-        try {
-            if (officeDao.updateOffice(office)) {
-                return HttpStatus.OK;
-            }
-        }catch (Exception e) {
-            return HttpStatus.BAD_REQUEST;
-        }
-        return HttpStatus.NOT_FOUND;
+    public boolean updateOffice(@PathVariable int officeId, @RequestBody Office office) {
+        office.setOfficeId(officeId);
+        return officeService.updateOffice(office);
     }
-//
-//    // Add a new office (restricted to authorized roles)
-//    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
-//    @PostMapping
-//    public HttpStatus addOffice(@RequestBody Office office) {
-//        if (officeDao.addOffice(office)) {
-//            return HttpStatus.CREATED;
-//        }
-//        return HttpStatus.BAD_REQUEST;
-//    }
+
+    @DeleteMapping("/{officeId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public boolean deleteOffice(@PathVariable int officeId) {
+        return officeService.deleteOffice(officeId);
+    }
 }
