@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-public class JdbcUsersDaoTests extends BaseDaoTests {
+public class JdbcStaffDaoUsersDaoTests extends BaseDaoTests {
     protected static final Users USERS_1 = new Users(1, "user1", "user1", "ROLE_USER", "User One", "123 Main St", "Newark", "DE", "19702");
     protected static final Users USERS_2 = new Users(2, "user2", "user2", "ROLE_USER", "User Two", "456 Oak Rd", "Newark", "DE", "19702");
     private static final Users USERS_3 = new Users(3, "user3", "user3", "ROLE_USER", "User Three", "789 Pine St", "Newark", "DE", "19702");

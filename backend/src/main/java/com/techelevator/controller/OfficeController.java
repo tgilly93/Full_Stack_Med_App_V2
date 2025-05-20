@@ -7,8 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
-@CrossOrigin 
+@CrossOrigin
 @RequestMapping("/api/offices")
 public class OfficeController {
     private final OfficeService officeService;
@@ -21,7 +22,7 @@ public class OfficeController {
     public List<Office> getAllOffices() {
         return officeService.getAllOffices();
     }
-    
+
     @GetMapping("/{officeId}")
     public Office getOfficeById(@PathVariable int officeId) {
         return officeService.getOfficeById(officeId);
