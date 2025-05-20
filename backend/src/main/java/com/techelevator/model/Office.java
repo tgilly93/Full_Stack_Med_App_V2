@@ -1,6 +1,7 @@
 package com.techelevator.model;
 
 import java.time.LocalTime;
+
 public class Office {
     private int officeId;
     private String officeName;
@@ -16,7 +17,8 @@ public class Office {
 
     }
 
-    public Office(int officeId, String officeName, String officePhoneNumber, String officeAddress, String officeCity, String state, String zipCode, LocalTime officeOpen, LocalTime officeClose) {
+    public Office(int officeId, String officeName, String officePhoneNumber, String officeAddress, String officeCity,
+            String state, String zipCode, LocalTime officeOpen, LocalTime officeClose) {
         this.officeId = officeId;
         this.officeName = officeName;
         this.officePhoneNumber = officePhoneNumber;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.techelevator.dao.OfficeDao;
 import com.techelevator.model.Office;
+
 @Component
 public class JdbcOfficeDao implements OfficeDao {
     private final JdbcTemplate jdbcTemplate;
@@ -44,21 +45,22 @@ public class JdbcOfficeDao implements OfficeDao {
 
     @Override
     public Office createOffice(Office office) {
-        String sql = "INSERT INTO office (office_name, office_phone_number, office_address, office_city, state, zip_code, office_open, office_close) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING office_id";
+        String sql = "INSERT INTO office (office_name, office_phone_number, office_address, office_city, state, zip_code, office_open, office_close) "
+                +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING office_id";
 
         Integer newId = jdbcTemplate.queryForObject(sql, Integer.class,
-            office.getOfficeName(),
-            office.getOfficePhoneNumber(),
-            office.getOfficeAddress(),
-            office.getOfficeCity(),
-            office.getState(),
-            office.getZipCode(),
-            office.getOfficeOpen(),
-            office.getOfficeClose());
+                office.getOfficeName(),
+                office.getOfficePhoneNumber(),
+                office.getOfficeAddress(),
+                office.getOfficeCity(),
+                office.getState(),
+                office.getZipCode(),
+                office.getOfficeOpen(),
+                office.getOfficeClose());
 
-            office.setOfficeId(newId);
-            return office;
+        office.setOfficeId(newId);
+        return office;
     }
 
     @Override
@@ -66,17 +68,17 @@ public class JdbcOfficeDao implements OfficeDao {
         String sql = "UPDATE office SET office_name = ?, office_phone_number = ?, office_address = ?, office_city = ?, state = ?, zip_code = ?, office_open = ?, office_close = ? WHERE office_id = ?";
 
         int rowsAffected = jdbcTemplate.update(sql,
-            office.getOfficeName(),
-            office.getOfficePhoneNumber(),
-            office.getOfficeAddress(),
-            office.getOfficeCity(),
-            office.getState(),
-            office.getZipCode(),
-            office.getOfficeOpen(),
-            office.getOfficeClose(),
-            office.getOfficeId());
+                office.getOfficeName(),
+                office.getOfficePhoneNumber(),
+                office.getOfficeAddress(),
+                office.getOfficeCity(),
+                office.getState(),
+                office.getZipCode(),
+                office.getOfficeOpen(),
+                office.getOfficeClose(),
+                office.getOfficeId());
 
-            return rowsAffected > 0;
+        return rowsAffected > 0;
     }
 
     @Override
