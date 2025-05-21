@@ -3,10 +3,9 @@ package com.techelevator.jdbcDao;
 import com.techelevator.dao.AppointmentDao;
 import com.techelevator.model.Appointment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import java.sql.Date;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -17,36 +16,39 @@ public class JdbcAppointmentDao implements AppointmentDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Appointment> appointmentRowMapper = (rs, rowNum) -> {
+        Appointment appointment = new Appointment();
+        appointment.setAppointmentId(rs.getInt("appointment_id"));
+        appointment.setNpiNumber(rs.getInt("npi_number"));
+        appointment.setPatientId(rs.getInt("patient_id"));
+        appointment.setDate(rs.getDate("date").toLocalDate());
+        appointment.setStartTime(rs.getTime("start_time").toLocalTime());
+        appointment.setEndTime(rs.getTime("end_time").toLocalTime());
+        appointment.setAppointmentType(rs.getString("appointment_type"));
+        appointment.setAppointmentStatus(rs.getString("appointment_status"));
+        return appointment;
+    };
+
     @Override
     public List<Appointment> getAllAppointments() {
-        String sql = "SELECT * FROM appointment ORDER BY start_time";
-
-        List<Appointment> availableAppointments = new ArrayList<>();
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
-        while (results.next()) {
-            availableAppointments.add(mapRowToAppointment(results));
-        }
-        return availableAppointments;
+        String sql = "SELECT * FROM Appointment ORDER BY start_time";
+        
+        return jdbcTemplate.query(sql, appointmentRowMapper);
     }
 
     @Override
-    public List<Appointment> getAppointmentsByClinicianIdAndDate(int npiNumber, Date date) {
-        String sql = "SELECT * FROM appointment WHERE npi_number = ? AND date = ? ";
+    public List<Appointment> getAppointmentsByClinicianIdAndDate(int npiNumber, LocalDate date) {
+        String sql = "SELECT * FROM Appointment WHERE npi_number = ? AND date = ? ";
 
-        List<Appointment> availableAppointments = new ArrayList<>();
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, npiNumber, date);
-        while (results.next()) {
-            availableAppointments.add(mapRowToAppointment(results));
-        }
-        return availableAppointments;
+       return jdbcTemplate.query(sql, appointmentRowMapper, npiNumber, date);
     }
 
     @Override
-    public boolean addAppointment(Appointment appointment) {
-        String sql = "INSERT INTO appointment(npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public Appointment addAppointment(Appointment appointment) {
+        String sql = "INSERT INTO Appointment (npi_number, patient_id, date, start_time, end_time, appointment_type, appointment_status)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING appointment_id";
 
-        int rowsAffected = jdbcTemplate.update(sql,
+        int newId = jdbcTemplate.queryForObject(sql, Integer.class,
                 appointment.getNpiNumber(),
                 appointment.getPatientId(),
                 appointment.getDate(),
@@ -55,25 +57,33 @@ public class JdbcAppointmentDao implements AppointmentDao {
                 appointment.getAppointmentType(),
                 appointment.getAppointmentStatus());
 
-        return rowsAffected > 0;
+        appointment.setAppointmentId(newId);
+
+        return appointment;
     }
 
     @Override
     public boolean updateAppointment(Appointment appointment) {
-        String sql = "UPDATE appointment SET appointment_type = ?, appointment_status = ?, start_time = ?, end_time = ?, date = ? WHERE appointment_id = ?";
+        String sql = "UPDATE Appointment SET npi_number = ?, patient_id = ?, date = ?, start_time = ?, end_time = ?, appointment_type = ?, appointment_status = ? WHERE appointment_id = ?";
 
-        return jdbcTemplate.update(sql,
-                appointment.getAppointmentType(),
-                appointment.getAppointmentStatus(),
+        int rowsAffected = jdbcTemplate.update(sql,
+                appointment.getNpiNumber(),
+                appointment.getPatientId(),
+                appointment.getDate(),
                 appointment.getStartTime(),
                 appointment.getEndTime(),
-                appointment.getDate(),
-                appointment.getAppointmentId()) == 1;
+                appointment.getAppointmentType(),
+                appointment.getAppointmentStatus(),
+                appointment.getAppointmentId());
+
+        return rowsAffected > 0;
     }
+        
 
     @Override
     public boolean deleteAppointment(int appointmentId) {
         String sql = "DELETE FROM appointment WHERE appointment_id = ?";
+
         int rowsAffected = jdbcTemplate.update(sql, appointmentId);
 
         return rowsAffected > 0;
@@ -83,36 +93,13 @@ public class JdbcAppointmentDao implements AppointmentDao {
     public List<Appointment> getAppointmentsByPatientId(int patientId) {
         String sql = "SELECT * FROM appointment WHERE patient_id = ?";
 
-        List<Appointment> appointments = new ArrayList<>();
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, patientId);
-        while (results.next()) {
-            appointments.add(mapRowToAppointment(results));
-        }
-        return appointments;
+        return jdbcTemplate.query(sql, appointmentRowMapper, patientId);
     }
 
     @Override
     public List<Appointment> getAppointmentsByClinicianId(int npiNumber) {
         String sql = "SELECT * FROM appointment WHERE npi_number = ?";
 
-        List<Appointment> appointments = new ArrayList<>();
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, npiNumber);
-        while (results.next()) {
-            appointments.add(mapRowToAppointment(results));
-        }
-        return appointments;
-    }
-
-    private Appointment mapRowToAppointment(SqlRowSet rs) {
-        Appointment appointment = new Appointment();
-        appointment.setAppointmentId(rs.getInt("appointment_id"));
-        appointment.setNpiNumber(rs.getInt("npi_number"));
-        appointment.setPatientId(rs.getInt("patient_id"));
-        appointment.setDate(rs.getDate("date"));
-        appointment.setStartTime(rs.getTime("start_time"));
-        appointment.setEndTime(rs.getTime("end_time"));
-        appointment.setAppointmentType(rs.getString("appointment_type"));
-        appointment.setAppointmentStatus(rs.getString("appointment_status"));
-        return appointment;
+        return jdbcTemplate.query(sql, appointmentRowMapper, npiNumber);
     }
 }

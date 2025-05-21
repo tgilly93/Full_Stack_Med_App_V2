@@ -1,12 +1,13 @@
 package com.techelevator.controller;
 
-import com.techelevator.dao.AppointmentDao;
 import com.techelevator.model.Appointment;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.techelevator.service.AppointmentService;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -14,55 +15,48 @@ import java.util.List;
 @RequestMapping("/api/appointments")
 public class AppointmentController {
 
-    private final AppointmentDao appointmentDao;
+    private final AppointmentService appointmentService;
 
-    @Autowired
-    public AppointmentController(AppointmentDao appointmentDao) {
-        this.appointmentDao = appointmentDao;
+    public AppointmentController(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<Appointment> getAllAppointments() {
-        return appointmentDao.getAllAppointments();
+        return appointmentService.getAllAppointments();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addAppointment(@RequestBody Appointment appointment) {
-        boolean success = appointmentDao.addAppointment(appointment);
-        if (!success) {
-            throw new RuntimeException("Failed to create appointment.");
-        }
+    public Appointment addAppointment(@RequestBody Appointment appointment) {
+        return appointmentService.addAppointment(appointment);
     }
 
-    @PutMapping
-    public void updateAppointment(@RequestBody Appointment appointment) {
-        boolean success = appointmentDao.updateAppointment(appointment);
-        if (!success) {
-            throw new RuntimeException("Failed to update appointment.");
-        }
+    @PutMapping("/{appointmentId}")
+    public boolean updateAppointment(@PathVariable int appointmentId, @RequestBody Appointment appointment) {
+        appointment.setAppointmentId(appointmentId);
+
+        return appointmentService.updateAppointment(appointment);
     }
 
     @DeleteMapping("/{appointmentId}")
-    public void deleteAppointment(@PathVariable int appointmentId) {
-        boolean success = appointmentDao.deleteAppointment(appointmentId);
-        if (!success) {
-            throw new RuntimeException("Failed to delete appointment.");
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public boolean deleteAppointment(@PathVariable int appointmentId) {
+        return appointmentService.deleteAppointment(appointmentId);
     }
 
     @GetMapping("/patient/{patientId}")
     public List<Appointment> getAppointmentsByPatientId(@PathVariable int patientId) {
-        return appointmentDao.getAppointmentsByPatientId(patientId);
+        return appointmentService.getAppointmentsByPatientId(patientId);
     }
 
     @GetMapping("/doctor/{npiNumber}/date/{date}")
-    public List<Appointment> getAppointmentsByClinicianIdAndDate(@PathVariable int npiNumber, @PathVariable Date date) {
-        return appointmentDao.getAppointmentsByClinicianIdAndDate(npiNumber, date);
+    public List<Appointment> getAppointmentsByClinicianIdAndDate(@PathVariable int npiNumber, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return appointmentService.getAppointmentsByClinicianIdAndDate(npiNumber, date);
     }
 
     @GetMapping("/doctor/{npiNumber}")
     public List<Appointment> getAppointmentsByClinicianId(@PathVariable int npiNumber) {
-        return appointmentDao.getAppointmentsByClinicianId(npiNumber);
+        return appointmentService.getAppointmentsByClinicianId(npiNumber);
     }
 }
