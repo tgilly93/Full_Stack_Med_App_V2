@@ -1,15 +1,13 @@
 package com.techelevator.model;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Appointment {
     private int appointmentId;
     private int patientId;
     private int npiNumber;
-    private int officeId;
-    private Date date;
+    private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
     private String appointmentType;
@@ -18,11 +16,10 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(int appointmentId, int patientId, int npiNumber, int officeId, Date date, LocalTime startTime, LocalTime endTime, String appointmentType, String appointmentStatus) {
+    public Appointment(int appointmentId, int patientId, int npiNumber, LocalDate date, LocalTime startTime, LocalTime endTime, String appointmentType, String appointmentStatus) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.npiNumber = npiNumber;
-        this.officeId = officeId;
         this.date = date;
         this.startTime = (startTime);
         this.endTime = (endTime);
@@ -54,19 +51,11 @@ public class Appointment {
         this.npiNumber = npiNumber;
     }
 
-    public int getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(int officeId) {
-        this.officeId = officeId;
-    }
-
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -74,16 +63,16 @@ public class Appointment {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime.toLocalTime();
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
     public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime.toLocalTime();
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 
     public String getAppointmentType() {
@@ -108,7 +97,6 @@ public class Appointment {
                 "appointmentId=" + appointmentId +
                 ", patientId=" + patientId +
                 ", npiNumber=" + npiNumber +
-                ", officeId=" + officeId +
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
