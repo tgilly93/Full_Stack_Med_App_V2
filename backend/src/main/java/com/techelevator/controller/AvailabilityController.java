@@ -15,7 +15,6 @@ import java.util.List;
 public class AvailabilityController {
     private final AvailabilityDao availabilityDao;
 
-    @Autowired
     public AvailabilityController(AvailabilityDao availabilityDao) {
         this.availabilityDao = availabilityDao;
     }
