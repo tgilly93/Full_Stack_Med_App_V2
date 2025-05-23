@@ -5,7 +5,7 @@ import java.util.List;
 import com.techelevator.model.Prescription;
 
 public interface PrescriptionDao {
-    boolean addPrescription(Prescription prescription);
+    Prescription addPrescription(Prescription prescription);
 
     boolean updatePrescription(Prescription prescription);
 

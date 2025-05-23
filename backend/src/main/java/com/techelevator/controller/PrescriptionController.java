@@ -2,10 +2,8 @@ package com.techelevator.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.techelevator.dao.PrescriptionDao;
 import com.techelevator.model.Prescription;
 import com.techelevator.service.PrescriptionService;
 
@@ -21,7 +19,7 @@ public class PrescriptionController {
     }
 
     @PostMapping
-    public boolean addPrescription(@RequestBody Prescription prescription) {
+    public Prescription addPrescription(@RequestBody Prescription prescription) {
         return prescriptionService.addPrescription(prescription);
     }
 

@@ -1,11 +1,9 @@
 package com.techelevator.jdbcDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import com.techelevator.dao.PrescriptionDao;
@@ -34,10 +32,10 @@ public class JdbcPrescriptionDao implements PrescriptionDao {
     };
 
     @Override
-    public boolean addPrescription(Prescription prescription) {
-        String sql = "INSERT INTO Prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public Prescription addPrescription(Prescription prescription) {
+        String sql = "INSERT INTO Prescription (prescription_name, patient_id, npi_number, prescription_details, prescription_cost, insurance_coverage, prescription_status) " + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING prescription_id";
 
-        int rowsAffected = jdbcTemplate.update(sql,
+        int newId = jdbcTemplate.queryForObject(sql, Integer.class,
             prescription.getPrescriptionName(),
             prescription.getPatientId(),
             prescription.getNpiNumber(),
@@ -45,8 +43,10 @@ public class JdbcPrescriptionDao implements PrescriptionDao {
             prescription.getPrescriptionCost(),
             prescription.getInsuranceCoverage(),
             prescription.getPrescriptionStatus());
+        
+        prescription.setPrescriptionId(newId);       
 
-        return rowsAffected > 0;
+        return prescription;
     }
 
     @Override
