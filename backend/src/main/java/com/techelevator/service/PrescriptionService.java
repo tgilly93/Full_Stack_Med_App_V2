@@ -15,7 +15,7 @@ public class PrescriptionService {
         this.prescriptionDao = prescriptionDao;
     }
 
-    public boolean addPrescription(Prescription prescription) {
+    public Prescription addPrescription(Prescription prescription) {
         return prescriptionDao.addPrescription(prescription);
     }
 
