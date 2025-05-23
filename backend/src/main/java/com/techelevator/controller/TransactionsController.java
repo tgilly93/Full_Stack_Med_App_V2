@@ -42,6 +42,7 @@ public class TransactionsController {
 
     @PutMapping("/{transactionId}")
     public boolean updateTransaction(@PathVariable int transactionId, @RequestBody Transactions transactions) {
+        transactions.setTransactionId(transactionId);
         return transactionsService.updateTransaction(transactions);
     }
 
