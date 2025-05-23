@@ -1,30 +1,23 @@
 package com.techelevator.model;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Availability {
     private int availabilityId;
     private int npiNumber;
     private int officeId;
+    private LocalDate date;
     private String dayOfWeek;
-    private Time startTime;
-    private Time endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private boolean isAvailable;
-    private Date availabilityDate;
 
-    public Date getAvailabilityDate() {
-        return availabilityDate;
-    }
-
-    public void setAvailabilityDate(Date availabilityDate) {
-        this.availabilityDate = availabilityDate;
-    }
 
     public Availability() {
     }
 
-    public Availability(int availabilityId, int npiNumber, int officeId, String dayOfWeek, Time startTime, Time endTime, boolean isAvailable) {
+    public Availability(int availabilityId, int npiNumber, int officeId, LocalDate date, String dayOfWeek, LocalTime startTime, LocalTime endTime, boolean isAvailable) {
         this.availabilityId = availabilityId;
         this.npiNumber = npiNumber;
         this.officeId = officeId;
@@ -58,6 +51,14 @@ public class Availability {
         this.officeId = officeId;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public String getDayOfWeek() {
         return dayOfWeek;
     }
@@ -66,19 +67,19 @@ public class Availability {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public Time getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
@@ -96,6 +97,7 @@ public class Availability {
                 "availabilityId=" + availabilityId +
                 ", npiNumber=" + npiNumber +
                 ", officeId=" + officeId +
+                ", date=" + date +
                 ", dayOfWeek='" + dayOfWeek + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

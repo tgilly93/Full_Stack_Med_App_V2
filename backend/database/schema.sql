@@ -113,7 +113,7 @@ CREATE TABLE Availability (
 	day_of_week varchar(10),
 	start_time time,
 	end_time time,
-	is_available varchar(5) NOT NULL,
+	is_available boolean NOT NULL,
 	CONSTRAINT PK_Availability PRIMARY KEY(availability_id),
 	CONSTRAINT FK_Availability_Clinician FOREIGN KEY(office_id) REFERENCES Office(office_id),
 	FOREIGN KEY(npi_number) REFERENCES Clinician(npi_number)	

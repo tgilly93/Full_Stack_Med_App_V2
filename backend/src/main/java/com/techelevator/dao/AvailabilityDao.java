@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface AvailabilityDao {
 
-    boolean addAvailability(Availability availability);
+    Availability addAvailability(Availability availability);
 
     boolean updateAvailability(Availability availability);
 
     boolean deleteAvailability(int availabilityId);
 
-    List<Availability> getAvailabilityByDoctorId(int doctorId);
+    List<Availability> getAvailabilityByDoctorId(int npiNumber);
 
     List<Availability> getAvailabilityByDate(LocalDate date);
 
-    Availability getAvailabilityByDoctorIdAndDate(int doctorId, LocalDate date);
+    List<Availability> getAvailabilityByDoctorIdAndDate(int npiNumber, LocalDate date);
 }
