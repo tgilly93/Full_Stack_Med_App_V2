@@ -135,6 +135,8 @@ CREATE TABLE Messages (
 	message_content text,
 	date_time timestamp NOT NULL,
 	message_type varchar(20),
+	sender_deleted boolean NOT NULL DEFAULT false,
+	receiver_deleted boolean NOT NULL DEFAULT false,
 	CONSTRAINT PK_Message PRIMARY KEY(message_id),
     	CONSTRAINT FK_Message_Sender FOREIGN KEY(sender_id) REFERENCES Users(user_id),
     	CONSTRAINT FK_Message_Receiver FOREIGN KEY(receiver_id) REFERENCES Users(user_id)	
