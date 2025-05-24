@@ -29,7 +29,7 @@ public class MessagesController {
         return messagesService.getMessagesById(messageId);
     }
 
-    @GetMapping("/user/{userId}")//Inbox
+    @GetMapping("/user/{userId}") // Inbox
     public List<Messages> getMessagesForUser(@PathVariable int userId) {
         return messagesService.getMessagesForUser(userId);
     }

@@ -14,9 +14,10 @@ public class Messages {
 
     public Messages() {
 
-    } 
+    }
 
-    public Messages(int messageId, int senderId, int receiverId, String messageContent, LocalDateTime dateTime, String messageType, boolean senderDeleted, boolean receiverDeleted) {
+    public Messages(int messageId, int senderId, int receiverId, String messageContent, LocalDateTime dateTime,
+            String messageType, boolean senderDeleted, boolean receiverDeleted) {
         this.messageId = messageId;
         this.senderId = senderId;
         this.receiverId = receiverId;

@@ -51,11 +51,11 @@ public class JdbcMessagesDao implements MessagesDao {
         String sql = "INSERT INTO Messages (sender_id, receiver_id, message_content, date_time, message_type, sender_deleted, receiver_deleted) VALUES (?, ?, ?, ?, ?, false, false)";
 
         int rowsAffected = jdbcTemplate.update(sql,
-            message.getSenderId(),
-            message.getReceiverId(),
-            message.getMessageContent(),
-            Timestamp.valueOf(message.getDateTime()),
-            message.getMessageType());
+                message.getSenderId(),
+                message.getReceiverId(),
+                message.getMessageContent(),
+                Timestamp.valueOf(message.getDateTime()),
+                message.getMessageType());
 
         return rowsAffected > 0;
     }
@@ -84,4 +84,4 @@ public class JdbcMessagesDao implements MessagesDao {
         String sql = "DELETE FROM Messages WHERE message_id = ?";
         return jdbcTemplate.update(sql, messageId) > 0;
     }
-} 
+}
