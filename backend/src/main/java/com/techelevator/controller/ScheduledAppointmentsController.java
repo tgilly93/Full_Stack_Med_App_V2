@@ -3,8 +3,8 @@ package com.techelevator.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.techelevator.dao.ScheduledAppointmentsDao;
 import com.techelevator.model.ScheduledAppointments;
+import com.techelevator.service.ScheduledAppointmentsService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,37 +13,37 @@ import java.util.List;
 @RequestMapping("/api/scheduled-appointments")
 @CrossOrigin
 public class ScheduledAppointmentsController {
-    private final ScheduledAppointmentsDao scheduledAppointmentsDao;
+    private final ScheduledAppointmentsService scheduledAppointmentsService;
 
-    public ScheduledAppointmentsController(ScheduledAppointmentsDao scheduledAppointmentsDao) {
-        this.scheduledAppointmentsDao = scheduledAppointmentsDao;
+    public ScheduledAppointmentsController(ScheduledAppointmentsService scheduledAppointmentsService) {
+        this.scheduledAppointmentsService = scheduledAppointmentsService;
     }
 
     @GetMapping("")
     public List<ScheduledAppointments> getAllScheduledAppointments() {
-        return scheduledAppointmentsDao.getAllScheduledAppointments();
+        return scheduledAppointmentsService.getAllScheduledAppointments();
     }
 
     @GetMapping("/patient/{patientId}")
     public List<ScheduledAppointments> getScheduledAppointmentsByPatientId(@PathVariable int patientId) {
-        return scheduledAppointmentsDao.getScheduledAppointmentsByPatientId(patientId);
+        return scheduledAppointmentsService.getScheduledAppointmentsByPatientId(patientId);
     }
 
     @GetMapping("/doctor/{npiNumber}")
     public List<ScheduledAppointments> getScheduledAppointmentsByDoctorId(@PathVariable int npiNumber) {
-        return scheduledAppointmentsDao.getScheduledAppointmentsByDoctorId(npiNumber);
+        return scheduledAppointmentsService.getScheduledAppointmentsByDoctorId(npiNumber);
     }
 
     @GetMapping("/date/{date}")
     public List<ScheduledAppointments> getScheduledAppointmentsByDate(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
-        return scheduledAppointmentsDao.getScheduledAppointmentsByDate(localDate);
+        return scheduledAppointmentsService.getScheduledAppointmentsByDate(localDate);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
-        boolean success = scheduledAppointmentsDao.addScheduledAppointment(appointment);
+        boolean success = scheduledAppointmentsService.addScheduledAppointment(appointment);
         if (!success) {
             throw new RuntimeException("Failed to add scheduled appointment.");
         }
@@ -51,7 +51,7 @@ public class ScheduledAppointmentsController {
 
     @PutMapping
     public void updateScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
-        boolean success = scheduledAppointmentsDao.updateScheduledAppointment(appointment);
+        boolean success = scheduledAppointmentsService.updateScheduledAppointment(appointment);
         if (!success) {
             throw new RuntimeException("Failed to update scheduled appointment.");
         }
@@ -59,7 +59,7 @@ public class ScheduledAppointmentsController {
 
     @DeleteMapping("/{appointmentId}")
     public void deleteScheduledAppointment(@PathVariable int appointmentId) {
-        boolean success = scheduledAppointmentsDao.deleteScheduledAppointment(appointmentId);
+        boolean success = scheduledAppointmentsService.deleteScheduledAppointment(appointmentId);
         if (!success) {
             throw new RuntimeException("Failed to delete scheduled appointment.");
         }
