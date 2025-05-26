@@ -14,6 +14,7 @@
 ## ⚙️ Backend Issues
 
 <!-- BACKEND-ISSUES-START -->
+- [#50](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/50) Testing
 - [#33](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/33) Separate Service Layer Logic From JdbcDao Layer
 - [#29](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/29) Refactor JDBC's
 - [#28](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/28) Refactor Dao's
