@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.Users;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,7 +49,11 @@ public class JdbcUserDao implements UserDao {
     @Override
     public Users getUserByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
-        return jdbcTemplate.queryForObject(sql, usersRowMapper, username);
+        try {
+            return jdbcTemplate.queryForObject(sql, usersRowMapper, username);
+        } catch (EmptyResultDataAccessException e) {
+            return null; 
+        }
     }
 
     @Override
