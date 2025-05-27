@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import com.techelevator.dao.PatientDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.dto.LoginDto;
 import com.techelevator.dto.LoginResponseDto;
@@ -30,11 +32,13 @@ public class AuthenticationController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private UserDao userDao;
+    private PatientDao patientDao;
 
-    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao) {
+    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao, PatientDao patientDao) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDao = userDao;
+        this.patientDao = patientDao;
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
@@ -63,8 +67,24 @@ public class AuthenticationController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists.");
             } else {
                 Users users = userDao.createUser(
-                        new Users(newUser.getUsername(),newUser.getPassword(), newUser.getRole(), newUser.getName(), newUser.getAddress(), newUser.getCity(), newUser.getStateCode(), newUser.getZIP())
+                        new Users(newUser.getUsername(),newUser.getPassword(), newUser.getRole(), newUser.getFirstName() + " " + newUser.getLastName(), newUser.getAddress(), newUser.getCity(), newUser.getStateCode(), newUser.getZIP())
                 );
+
+                if ("role_patient".equalsIgnoreCase(newUser.getRole())) {
+                    Patient patient = new Patient();
+                    patient.setUserId(users.getUserId());
+                    patient.setPatientFirstName(newUser.getFirstName());
+                    patient.setPatientLastName(newUser.getLastName());
+                    patient.setPatientDateOfBirth(newUser.getDateOfBirth());
+                    patient.setPatientAddress(newUser.getAddress());
+                    patient.setPatientCity(newUser.getCity());
+                    patient.setPatientState(newUser.getStateCode());
+                    patient.setZipCode(newUser.getZIP());
+                    patient.setPatientPhoneNumber(newUser.getPhoneNumber());
+
+                    patientDao.createPatient(patient);
+                    
+                }
                 return users;
             }
         }

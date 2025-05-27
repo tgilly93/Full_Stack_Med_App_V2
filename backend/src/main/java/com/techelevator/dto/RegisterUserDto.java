@@ -1,7 +1,12 @@
 package com.techelevator.dto;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * RegisterUserDto is a class used to hold the registration information for a new user
@@ -19,7 +24,14 @@ public class RegisterUserDto {
     @NotEmpty(message = "Please confirm your password.")
     private String confirmPassword;
     @NotEmpty(message = "Name is required.")
-    private String name;
+    @NotEmpty(message = "First name is required.")
+    private String firstName;
+    @NotEmpty(message = "Last name is required.")
+    private String lastName;
+    @NotNull(message = "Date of birth is required.")
+    @JsonProperty("dateOfBirth")    
+    private LocalDate dateOfBirth;
+    private String phoneNumber;
     private String address;
     private String city;
     @NotEmpty(message = "State code is required.")
@@ -29,6 +41,7 @@ public class RegisterUserDto {
     @NotEmpty(message = "ZIP is required.")
     @Pattern(regexp = "^[0-9]{5}$",
             message = "ZIP must be 5 digits")
+    @JsonProperty("ZIP")
     private String ZIP;
     @NotEmpty(message = "Please select a role for this user.")
     private String role;
@@ -59,20 +72,36 @@ public class RegisterUserDto {
         this.confirmPassword = confirmPassword;
     }
 
-    public String getRole() {
-        return role;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getName() {
-        return name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getAddress() {
@@ -105,5 +134,13 @@ public class RegisterUserDto {
 
     public void setZIP(String ZIP) {
         this.ZIP = ZIP;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
