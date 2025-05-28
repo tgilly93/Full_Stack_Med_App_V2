@@ -98,13 +98,15 @@ public class AuthenticationController {
                     staff.setStaffFirstName(newUser.getFirstName());
                     staff.setStaffLastName(newUser.getLastName());
                     staff.setStaffPhoneNumber(newUser.getPhoneNumber());
-
-                    int staffId = staffDao.createStaff(staff);
+                    staff.setStaffAddress(users.getAddress());
+                    staff.setOfficeId(newUser.getPrimaryOffice());
+                    
+                    Staff createdStaff = staffDao.createStaff(staff);
 
                     Clinician clinician = new Clinician();
                     clinician.setNpiNumber(newUser.getNpiNumber());
                     clinician.setUserId(users.getUserId());
-                    clinician.setStaffId(newUser.getStaffId());
+                    clinician.setStaffId(createdStaff.getStaffId());
                     clinician.setPrimaryOffice(newUser.getPrimaryOffice());
                     clinician.setClinicianRatePerHour(newUser.getClinicianRatePerHour());
 
