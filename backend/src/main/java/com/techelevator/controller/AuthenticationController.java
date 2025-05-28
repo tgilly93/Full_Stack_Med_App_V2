@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import com.techelevator.dao.ClinicianDao;
 import com.techelevator.dao.PatientDao;
+import com.techelevator.dao.StaffDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.dto.LoginDto;
 import com.techelevator.dto.LoginResponseDto;
@@ -33,12 +35,16 @@ public class AuthenticationController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private UserDao userDao;
     private PatientDao patientDao;
+    private ClinicianDao clinicianDao;
+    private StaffDao staffDao;
 
-    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao, PatientDao patientDao) {
+    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao, PatientDao patientDao, ClinicianDao clinicianDao, StaffDao staffDao) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDao = userDao;
         this.patientDao = patientDao;
+        this.clinicianDao = clinicianDao;
+        this.staffDao = staffDao;
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
@@ -82,9 +88,29 @@ public class AuthenticationController {
                     patient.setZipCode(newUser.getZIP());
                     patient.setPatientPhoneNumber(newUser.getPhoneNumber());
 
-                    patientDao.createPatient(patient);
-                    
+                    patientDao.createPatient(patient);    
+                } else if ("role_clinician".equalsIgnoreCase(newUser.getRole())) {
+                    if (newUser.getNpiNumber() == null || newUser.getPrimaryOffice() == null || newUser.getClinicianRatePerHour() == null) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required clinician fields.");
+                    }
+
+                    Staff staff = new Staff();
+                    staff.setStaffFirstName(newUser.getFirstName());
+                    staff.setStaffLastName(newUser.getLastName());
+                    staff.setStaffPhoneNumber(newUser.getPhoneNumber());
+
+                    int staffId = staffDao.createStaff(staff);
+
+                    Clinician clinician = new Clinician();
+                    clinician.setNpiNumber(newUser.getNpiNumber());
+                    clinician.setUserId(users.getUserId());
+                    clinician.setStaffId(newUser.getStaffId());
+                    clinician.setPrimaryOffice(newUser.getPrimaryOffice());
+                    clinician.setClinicianRatePerHour(newUser.getClinicianRatePerHour());
+
+                    clinicianDao.createClinician(clinician);
                 }
+
                 return users;
             }
         }

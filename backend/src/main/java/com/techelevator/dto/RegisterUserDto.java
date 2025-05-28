@@ -1,5 +1,6 @@
 package com.techelevator.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotEmpty;
@@ -31,6 +32,8 @@ public class RegisterUserDto {
     @NotNull(message = "Date of birth is required.")
     @JsonProperty("dateOfBirth")    
     private LocalDate dateOfBirth;
+    private String role;
+
     private String phoneNumber;
     private String address;
     private String city;
@@ -43,8 +46,12 @@ public class RegisterUserDto {
             message = "ZIP must be 5 digits")
     @JsonProperty("ZIP")
     private String ZIP;
+
+    private Integer primaryOffice;
+
     @NotEmpty(message = "Please select a role for this user.")
-    private String role;
+    private Integer npiNumber;
+    private BigDecimal clinicianRatePerHour;
 
     public RegisterUserDto() {}
 
@@ -96,6 +103,14 @@ public class RegisterUserDto {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -136,11 +151,27 @@ public class RegisterUserDto {
         this.ZIP = ZIP;
     }
 
-    public String getRole() {
-        return role;
+    public Integer getPrimaryOffice() {
+        return primaryOffice;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setPrimaryOffice(Integer primaryOffice) {
+        this.primaryOffice = primaryOffice;
+    }
+
+    public Integer getNpiNumber() {
+        return npiNumber;
+    }
+
+    public void setNpiNumber(Integer npiNumber) {
+        this.npiNumber = npiNumber;
+    }
+
+    public BigDecimal getClinicianRatePerHour() {
+        return clinicianRatePerHour;
+    }
+
+    public void setClinicianRatePerHour(BigDecimal clinicianRatePerHour) {
+        this.clinicianRatePerHour = clinicianRatePerHour;
     }
 }
