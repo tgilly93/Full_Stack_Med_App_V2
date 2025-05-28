@@ -3,6 +3,7 @@ package com.techelevator.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -24,17 +25,18 @@ public class RegisterUserDto {
     private String password;
     @NotEmpty(message = "Please confirm your password.")
     private String confirmPassword;
-    @NotEmpty(message = "Name is required.")
-    @NotEmpty(message = "First name is required.")
+    @NotBlank(message = "First name is required.")
     private String firstName;
-    @NotEmpty(message = "Last name is required.")
+    @NotBlank(message = "Last name is required.")
     private String lastName;
     @NotNull(message = "Date of birth is required.")
     @JsonProperty("dateOfBirth")    
     private LocalDate dateOfBirth;
+    @NotEmpty(message = "Please select a role for this user.")
     private String role;
-
+    @NotBlank(message = "Phone number is required.")
     private String phoneNumber;
+    @NotBlank(message = "Address is required.")
     private String address;
     private String city;
     @NotEmpty(message = "State code is required.")
@@ -46,10 +48,9 @@ public class RegisterUserDto {
             message = "ZIP must be 5 digits")
     @JsonProperty("ZIP")
     private String ZIP;
-
+    @NotNull(message = "Office is required.")
     private Integer primaryOffice;
 
-    @NotEmpty(message = "Please select a role for this user.")
     private Integer npiNumber;
     private BigDecimal clinicianRatePerHour;
 
