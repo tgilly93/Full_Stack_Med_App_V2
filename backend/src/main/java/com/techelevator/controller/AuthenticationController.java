@@ -111,6 +111,15 @@ public class AuthenticationController {
                     clinician.setClinicianRatePerHour(newUser.getClinicianRatePerHour());
 
                     clinicianDao.createClinician(clinician);
+                } else {
+                    Staff staff = new Staff();
+                    staff.setStaffFirstName(newUser.getFirstName());
+                    staff.setStaffLastName(newUser.getLastName());
+                    staff.setStaffPhoneNumber(newUser.getPhoneNumber());
+                    staff.setStaffAddress(users.getAddress());
+                    staff.setOfficeId(newUser.getPrimaryOffice());
+
+                    staffDao.createStaff(staff);
                 }
 
                 return users;
