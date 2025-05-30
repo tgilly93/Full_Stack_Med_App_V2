@@ -20,7 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final UserModelDetailsService userModelDetailsService;
+    // private final UserModelDetailsService userModelDetailsService;
 
     public WebSecurityConfig(
             TokenProvider tokenProvider,
@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.tokenProvider = tokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-        this.userModelDetailsService = userModelDetailsService;
+        // this.userModelDetailsService = userModelDetailsService;
     }
 
     @Bean
