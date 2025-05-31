@@ -14,6 +14,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import com.techelevator.security.CustomUserDetails;
+import com.techelevator.security.UserModelDetailsService;
+
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +31,7 @@ public class TokenProvider implements InitializingBean {
     private final String base64Secret;
     private final long tokenValidityInMilliseconds;
     private final long tokenValidityInMillisecondsForRememberMe;
+    private final UserModelDetailsService userModelDetailsService;
 
     private Key key;
 
@@ -35,10 +39,11 @@ public class TokenProvider implements InitializingBean {
     public TokenProvider(
             @Value("${jwt.base64-secret}") String base64Secret,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
-            @Value("${jwt.token-validity-in-seconds-for-remember-me}") long tokenValidityInSecondsForRememberMe) {
+            @Value("${jwt.token-validity-in-seconds-for-remember-me}") long tokenValidityInSecondsForRememberMe, UserModelDetailsService userModelDetailsService) {
         this.base64Secret = base64Secret;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
         this.tokenValidityInMillisecondsForRememberMe = tokenValidityInSecondsForRememberMe * 1000;
+        this.userModelDetailsService = userModelDetailsService;
     }
 
     @Override
@@ -79,14 +84,15 @@ public class TokenProvider implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody();
 
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+        String username = claims.getSubject();
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        CustomUserDetails customUserDetails = userModelDetailsService.loadUserByUsername(username);
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        log.debug("JWT subject (username): {}", username);
+log.debug("CustomUserDetails loaded: {}", customUserDetails);
+log.debug("Principal class: {}", customUserDetails.getClass().getName());
+
+        return new UsernamePasswordAuthenticationToken(customUserDetails, token, customUserDetails.getAuthorities());
     }
 
     public boolean validateToken(String authToken) {

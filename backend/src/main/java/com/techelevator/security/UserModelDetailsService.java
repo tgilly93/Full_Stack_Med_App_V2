@@ -27,19 +27,11 @@ public class UserModelDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String login) {
+    public CustomUserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating user '{}'", login);
-        return createSpringSecurityUser(login, userDao.getUserByUsername(login));
-    }
+        Users users = userDao.getUserByUsername(login);
 
-    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String login, Users users) {
         List<GrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority(users.getRole()));
-
-        return new org.springframework.security.core.userdetails.User(
-            users.getUsername(),
-            users.getPasswordHash(),
-            grantedAuthorities
-        );
+        return new CustomUserDetails(users, grantedAuthorities);
     }
 }
-
