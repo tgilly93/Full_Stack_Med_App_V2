@@ -54,7 +54,7 @@ public class UsersController {
     }
 
     @PreAuthorize("#userId == authentication.principal.userId or hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public boolean deleteUser(@PathVariable int userId) {
         return usersService.deleteUser(userId);

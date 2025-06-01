@@ -35,11 +35,11 @@ public class TokenProvider implements InitializingBean {
 
     private Key key;
 
-
     public TokenProvider(
             @Value("${jwt.base64-secret}") String base64Secret,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
-            @Value("${jwt.token-validity-in-seconds-for-remember-me}") long tokenValidityInSecondsForRememberMe, UserModelDetailsService userModelDetailsService) {
+            @Value("${jwt.token-validity-in-seconds-for-remember-me}") long tokenValidityInSecondsForRememberMe,
+            UserModelDetailsService userModelDetailsService) {
         this.base64Secret = base64Secret;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
         this.tokenValidityInMillisecondsForRememberMe = tokenValidityInSecondsForRememberMe * 1000;
@@ -87,10 +87,6 @@ public class TokenProvider implements InitializingBean {
         String username = claims.getSubject();
 
         CustomUserDetails customUserDetails = userModelDetailsService.loadUserByUsername(username);
-
-        log.debug("JWT subject (username): {}", username);
-log.debug("CustomUserDetails loaded: {}", customUserDetails);
-log.debug("Principal class: {}", customUserDetails.getClass().getName());
 
         return new UsernamePasswordAuthenticationToken(customUserDetails, token, customUserDetails.getAuthorities());
     }
