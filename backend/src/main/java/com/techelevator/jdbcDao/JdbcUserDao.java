@@ -72,11 +72,20 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean updateUser(Users user) {
+        Users existingUser = getUserByUserId(user.getUserId());
+
+        String passwordToStore = user.getPasswordHash();
+        if (passwordToStore != null && !passwordToStore.isBlank()) {
+            passwordToStore = passwordEncoder.encode(passwordToStore);
+        } else {
+            passwordToStore = existingUser.getPasswordHash();
+        }
+
         String sql = "UPDATE users SET username = ?, password_hash = ?, role = ?, name = ?, address = ?, city = ?, state_code = ?, zip = ? WHERE user_id = ?";
 
         int rowsAffected = jdbcTemplate.update(sql, 
             user.getUsername(),
-            user.getPasswordHash(),
+            passwordToStore,
             user.getRole(),
             user.getName(),
             user.getAddress(),

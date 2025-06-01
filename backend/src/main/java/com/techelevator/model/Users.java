@@ -115,7 +115,6 @@ public class Users {
       return "Users{" +
               "userId=" + userId +
               ", username='" + username + '\'' +
-              ", passwordHash='" + passwordHash + '\'' +
               ", role='" + role + '\'' +
               ", name='" + name + '\'' +
               ", address='" + address + '\'' +
