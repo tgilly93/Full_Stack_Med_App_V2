@@ -1,5 +1,6 @@
 package com.techelevator.dao;
 
+import com.techelevator.model.Patient;
 import com.techelevator.model.Users;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface UserDao {
     boolean updateUser(Users user);
 
     boolean deleteUser(int userId);
+
+    boolean updateUserDetailsFromPatient(Patient patient);
 }
