@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,30 +28,35 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLINICIAN', 'ROLE_RECEPTIONIST')")
     @GetMapping
     public List<Patient> getAllPatients() {
         return patientService.getAllPatients();
     }
 
-    @GetMapping("/{patientId}")
+    @PreAuthorize("@securityService.isPatientOwnedByUser(#patientId, authentication.principal.userId) or hasAnyRole('ROLE_ADMIN', 'ROLE_CLINICIAN', 'ROLE_RECEPTIONIST')")
+    @GetMapping("/id/{patientId}")
     public Patient getPatientByPatientId(@PathVariable int patientId) {
         return patientService.getPatientByPatientId(patientId);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Patient createPatient(@RequestBody Patient patient) {
         return patientService.createPatient(patient);
     }
 
+    @PreAuthorize("@securityService.isPatientOwnedByUser(#patientId, authentication.principal.userId) or hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST')")
     @PutMapping("/{patientId}")
     public boolean updatePatient(@PathVariable int patientId, @RequestBody Patient patient) {
         patient.setPatientId(patientId);
 
-        return patientService.updatePatient(patient);
+        return patientService.updatePatientFromPatient(patient);
     }
 
-    @DeleteMapping("/{patientId}")
+    @PreAuthorize("@securityService.isPatientOwnedByUser(#patientId, authentication.principal.userId) or hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/delete/{patientId}")
     public boolean deletePatient(@PathVariable int patientId) {
         return patientService.deletePatient(patientId);
     }

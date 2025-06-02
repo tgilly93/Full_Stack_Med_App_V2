@@ -3,6 +3,7 @@ package com.techelevator.jdbcDao;
 import java.util.List;
 
 import com.techelevator.dao.UserDao;
+import com.techelevator.model.Patient;
 import com.techelevator.model.Users;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -52,17 +53,19 @@ public class JdbcUserDao implements UserDao {
         try {
             return jdbcTemplate.queryForObject(sql, usersRowMapper, username);
         } catch (EmptyResultDataAccessException e) {
-            return null; 
+            return null;
         }
     }
 
     @Override
     public Users createUser(Users user) {
-        String sql = "INSERT INTO users (username, password_hash, role, name, address, city, state_code, zip) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING user_id";
+        String sql = "INSERT INTO users (username, password_hash, role, name, address, city, state_code, zip) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING user_id";
 
         String hashedPassword = passwordEncoder.encode(user.getPasswordHash());
 
-        int newUserId = jdbcTemplate.queryForObject(sql, Integer.class, user.getUsername(), hashedPassword, user.getRole(), user.getName(), user.getAddress(), user.getCity(), user.getStateCode(), user.getZip());
+        int newUserId = jdbcTemplate.queryForObject(sql, Integer.class, user.getUsername(), hashedPassword,
+                user.getRole(), user.getName(), user.getAddress(), user.getCity(), user.getStateCode(), user.getZip());
 
         user.setUserId(newUserId);
         user.setPasswordHash(hashedPassword);
@@ -83,24 +86,40 @@ public class JdbcUserDao implements UserDao {
 
         String sql = "UPDATE users SET username = ?, password_hash = ?, role = ?, name = ?, address = ?, city = ?, state_code = ?, zip = ? WHERE user_id = ?";
 
-        int rowsAffected = jdbcTemplate.update(sql, 
-            user.getUsername(),
-            passwordToStore,
-            user.getRole(),
-            user.getName(),
-            user.getAddress(),
-            user.getCity(),
-            user.getStateCode(),
-            user.getZip(),
-            user.getUserId());
+        int rowsAffected = jdbcTemplate.update(sql,
+                user.getUsername(),
+                passwordToStore,
+                user.getRole(),
+                user.getName(),
+                user.getAddress(),
+                user.getCity(),
+                user.getStateCode(),
+                user.getZip(),
+                user.getUserId());
 
-            return rowsAffected > 0;
+        return rowsAffected > 0;
     }
 
     @Override
     public boolean deleteUser(int userId) {
         String sql = "DELETE FROM users WHERE user_id = ?";
         int rowsAffected = jdbcTemplate.update(sql, userId);
+
+        return rowsAffected > 0;
+    }
+
+    @Override
+    public boolean updateUserDetailsFromPatient(Patient patient) {
+        String fullName = patient.getPatientFirstName() + " " + patient.getPatientLastName();
+        String sql = "UPDATE users SET name = ?, address = ?, city = ?, state_code = ?, zip = ? WHERE user_id = ?";
+
+        int rowsAffected = jdbcTemplate.update(sql,
+                fullName,
+                patient.getPatientAddress(),
+                patient.getPatientCity(),
+                patient.getPatientState(),
+                patient.getZipCode(),
+                patient.getUserId());
 
         return rowsAffected > 0;
     }
