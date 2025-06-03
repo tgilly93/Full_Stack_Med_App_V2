@@ -3,6 +3,7 @@ package com.techelevator.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,8 @@ public class ClinicianController {
         this.clinicianService = clinicianService;
     }
 
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLINICIAN', 'ROLE_RECEPTIONIST', 'ROLE_PATIENT')")
     @GetMapping
     public List<Clinician> getAllClinicians() {
         return clinicianService.getAllClinicians();
