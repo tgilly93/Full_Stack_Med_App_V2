@@ -35,17 +35,20 @@ public class ClinicianController {
         return clinicianService.getAllClinicians();
     }
 
-    @GetMapping("/{npiNumber}")
+    @PreAuthorize("@securityService.isClinicianOwnedByUser(#npiNumber, authentication.principal.userId) or hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST')")
+    @GetMapping("/npi/{npiNumber}")
     public Clinician getClinicianByNpi(@PathVariable int npiNumber) {
         return clinicianService.getClinicianByNpi(npiNumber);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Clinician createClinician(@RequestBody Clinician clinician) {
         return clinicianService.createClinician(clinician);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{npiNumber}")
     public boolean updateClinician(@PathVariable int npiNumber, @RequestBody Clinician clinician) {
         clinician.setNpiNumber(npiNumber);
@@ -53,7 +56,8 @@ public class ClinicianController {
         return clinicianService.updateClinician(clinician);
     }
 
-    @DeleteMapping("/{npiNumber}")
+    @PreAuthorize("@securityService.isClinicianOwnedByUser(#npiNumber, authentication.principal.userId) or hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/delete/{npiNumber}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public boolean deleteClinician(@PathVariable int npiNumber) {
         return clinicianService.deleteClinician(npiNumber);
