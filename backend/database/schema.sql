@@ -1,8 +1,8 @@
 BEGIN TRANSACTION;
 
 DROP TABLE IF EXISTS Office;
-DROP TABLE IF EXISTS Staff;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS Staff;
 DROP TABLE IF EXISTS Patient;
 DROP TABLE IF EXISTS Clinician;
 DROP TABLE IF EXISTS Appointment;
@@ -26,17 +26,6 @@ CREATE TABLE Office (
 	CONSTRAINT PK_Office PRIMARY KEY(office_id)
 );
 
-CREATE TABLE Staff (
-	staff_id serial NOT NULL,
-	office_id int NOT NULL,
-	staff_first_name varchar(50) NOT NULL,
-	staff_last_name varchar(50) NOT NULL,
-	staff_address varchar(100) NOT NULL,	
-	staff_phone_number varchar(15),
-	CONSTRAINT PK_Staff PRIMARY KEY(staff_id),
-	CONSTRAINT FK_Staff_Office FOREIGN KEY(office_id) REFERENCES Office(office_id)
-);
-
 CREATE TABLE users (
     	user_id SERIAL,
     	username varchar(50) NOT NULL UNIQUE,
@@ -48,7 +37,18 @@ CREATE TABLE users (
     	state_code char(2) NULL,
     	zip varchar(5) NULL,
     	CONSTRAINT PK_user PRIMARY KEY (user_id)
+);
 
+CREATE TABLE Staff (
+	staff_id serial NOT NULL PRIMARY KEY,
+	office_id int NOT NULL,
+	user_id INT NOT NULL,
+	staff_first_name varchar(50) NOT NULL,
+	staff_last_name varchar(50) NOT NULL,
+	staff_address varchar(100) NOT NULL,	
+	staff_phone_number varchar(15),
+	CONSTRAINT FK_Staff_users FOREIGN KEY(user_id) REFERENCES users(user_id),
+	CONSTRAINT FK_Staff_Office FOREIGN KEY(office_id) REFERENCES Office(office_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Patient (

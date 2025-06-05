@@ -28,9 +28,9 @@ patient_insert AS (
     RETURNING patient_id
 ),
 staff_insert AS (
-    INSERT INTO staff (office_id, staff_first_name, staff_last_name, staff_address, staff_phone_number)
-    SELECT office_id, 'Clinician', 'Test', '456 Test Lane', '555-000-5555'
-    FROM office_insert
+    INSERT INTO staff (office_id, user_id, staff_first_name, staff_last_name, staff_address, staff_phone_number)
+    SELECT office_id, user_id, 'Clinician', 'Test', '456 Test Lane', '555-000-5555'
+    FROM office_insert, user_insert_clinician
     RETURNING staff_id
 ),
 clinician_insert AS (

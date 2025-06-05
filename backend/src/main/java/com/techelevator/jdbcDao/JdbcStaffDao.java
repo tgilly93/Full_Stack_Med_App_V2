@@ -21,6 +21,7 @@ public class JdbcStaffDao implements StaffDao {
         Staff staff = new Staff();
         staff.setStaffId(rs.getInt("staff_id"));
         staff.setOfficeId(rs.getInt("office_id"));
+        staff.setUserId(rs.getInt("user_id"));
         staff.setStaffFirstName(rs.getString("staff_first_name"));
         staff.setStaffLastName(rs.getString("staff_last_name"));
         staff.setStaffAddress(rs.getString("staff_address"));
@@ -42,10 +43,11 @@ public class JdbcStaffDao implements StaffDao {
 
     @Override
     public Staff createStaff(Staff staff) {
-        String sql = "INSERT INTO staff (office_id, staff_first_name, staff_last_name, staff_address, staff_phone_number) " + "VALUES (?, ?, ?, ?, ?) RETURNING staff_id";
+        String sql = "INSERT INTO staff (office_id, user_id, staff_first_name, staff_last_name, staff_address, staff_phone_number) " + "VALUES (?, ?, ?, ?, ?, ?) RETURNING staff_id";
 
         int newId = jdbcTemplate.queryForObject(sql, Integer.class,
             staff.getOfficeId(),
+            staff.getUserId(),
             staff.getStaffFirstName(),
             staff.getStaffLastName(),
             staff.getStaffAddress(),
@@ -57,10 +59,11 @@ public class JdbcStaffDao implements StaffDao {
 
     @Override
     public boolean updateStaff(Staff staff) {
-        String sql = "UPDATE staff SET office_id = ?, staff_first_name = ?, staff_last_name = ?, staff_address = ?, staff_phone_number = ? WHERE staff_id = ?";
+        String sql = "UPDATE staff SET office_id = ?, user_id = ?, staff_first_name = ?, staff_last_name = ?, staff_address = ?, staff_phone_number = ? WHERE staff_id = ?";
 
         int rowsAffected = jdbcTemplate.update(sql,
             staff.getOfficeId(),
+            staff.getUserId(),
             staff.getStaffFirstName(),
             staff.getStaffLastName(),
             staff.getStaffAddress(),
@@ -77,5 +80,11 @@ public class JdbcStaffDao implements StaffDao {
         int rowsAffected = jdbcTemplate.update(sql, staffId);
 
         return rowsAffected > 0;
+    }
+
+    @Override
+    public Integer getUserByStaffId(int staffId) {
+        String sql = "SELECT user_id FROM Staff WHERE staff_id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, staffId);
     }
 }

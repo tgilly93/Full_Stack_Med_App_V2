@@ -123,4 +123,11 @@ public class JdbcUserDao implements UserDao {
 
         return rowsAffected > 0;
     }
+
+    @Override
+    public boolean updateUserNameAndAddress(int userId, String name, String address) {
+        String sql = "UPDATE users SET name = ?, address = ? WHERE user_id = ?";
+        int rowsAffected = jdbcTemplate.update(sql, name, address, userId);
+        return rowsAffected > 0;
+    }
 }
