@@ -14,4 +14,6 @@ public interface StaffDao {
     boolean updateStaff(Staff staff);
 
     boolean deleteStaff(int staffId);
+
+    Integer getUserByStaffId(int staffId);
 }

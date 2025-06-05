@@ -20,4 +20,6 @@ public interface UserDao {
     boolean deleteUser(int userId);
 
     boolean updateUserDetailsFromPatient(Patient patient);
+
+    boolean updateUserNameAndAddress(int userId, String name, String address);
 }

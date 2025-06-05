@@ -95,6 +95,7 @@ public class AuthenticationController {
                     }
 
                     Staff staff = new Staff();
+                    staff.setUserId(users.getUserId());
                     staff.setStaffFirstName(newUser.getFirstName());
                     staff.setStaffLastName(newUser.getLastName());
                     staff.setStaffPhoneNumber(newUser.getPhoneNumber());
@@ -113,6 +114,7 @@ public class AuthenticationController {
                     clinicianDao.createClinician(clinician);
                 } else {
                     Staff staff = new Staff();
+                    staff.setUserId(users.getUserId());
                     staff.setStaffFirstName(newUser.getFirstName());
                     staff.setStaffLastName(newUser.getLastName());
                     staff.setStaffPhoneNumber(newUser.getPhoneNumber());

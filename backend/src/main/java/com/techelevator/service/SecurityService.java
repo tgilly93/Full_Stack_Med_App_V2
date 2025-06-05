@@ -2,16 +2,21 @@ package com.techelevator.service;
 
 import org.springframework.stereotype.Component;
 
+import com.techelevator.dao.StaffDao;
+import com.techelevator.model.Clinician;
 import com.techelevator.model.Patient;
+import com.techelevator.model.Staff;
 
 @Component
 public class SecurityService {
     private final PatientService patientService;
     private final ClinicianService clinicianService;
+    private final StaffDao staffDao;
 
-    public SecurityService(PatientService patientService, ClinicianService clinicianService) {
+    public SecurityService(PatientService patientService, ClinicianService clinicianService, StaffDao staffDao) {
         this.patientService = patientService;
         this.clinicianService = clinicianService;
+        this.staffDao = staffDao;
     }
 
     public boolean isPatientOwnedByUser(int patientId, int userId) {
@@ -20,7 +25,12 @@ public class SecurityService {
     }
 
     public boolean isClinicianOwnedByUser(int npiNumber, int userId) {
-        var clinician = clinicianService.getClinicianByNpi(npiNumber);
+        Clinician clinician = clinicianService.getClinicianByNpi(npiNumber);
         return clinician != null && clinician.getUserId() == userId;
+    }
+
+    public boolean isStaffOwnedByUser(int staffId, int userId) {
+        Staff staff = staffDao.getStaffById(staffId);
+        return staff != null && staff.getUserId() == userId;
     }
 }

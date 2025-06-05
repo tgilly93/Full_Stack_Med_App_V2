@@ -3,6 +3,7 @@ package com.techelevator.model;
 public class Staff {
     private int staffId;
     private int officeId;
+    private int userId;
     private String staffFirstName;
     private String staffLastName;
     private String staffAddress;
@@ -12,9 +13,10 @@ public class Staff {
 
     }
 
-    public Staff(int staffId, int officeId, String staffFirstName, String staffLastName, String staffAddress, String staffPhoneNumber) {
+    public Staff(int staffId, int officeId, int userId, String staffFirstName, String staffLastName, String staffAddress, String staffPhoneNumber) {
         this.staffId = staffId;
         this.officeId = officeId;
+        this.userId = userId;
         this.staffFirstName = staffFirstName;
         this.staffLastName = staffLastName;
         this.staffPhoneNumber = staffPhoneNumber;
@@ -34,6 +36,14 @@ public class Staff {
 
     public void setOfficeId(int officeId) {
         this.officeId = officeId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getStaffFirstName() {
@@ -73,6 +83,7 @@ public class Staff {
         return "Staff{" +
                 "staffId=" + staffId +
                 ", officeId=" + officeId +
+                ", userId=" + userId +
                 ", staffFirstName='" + staffFirstName + '\'' +
                 ", staffLastName='" + staffLastName + '\'' +
                 ", staffAddress='" + staffAddress + '\'' +
