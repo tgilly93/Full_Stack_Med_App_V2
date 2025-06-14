@@ -2,6 +2,7 @@ package com.techelevator.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ public class PrescriptionInfoController {
         this.prescriptionInfoService = prescriptionInfoService;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLINICIAN', 'ROLE_RECEPTIONIST', 'ROLE_PATIENT')")
     @GetMapping
     public List<PrescriptionInfoDto> getAllPrescriptionInfo() {
         return prescriptionInfoService.getAllPrescriptionInfo();
