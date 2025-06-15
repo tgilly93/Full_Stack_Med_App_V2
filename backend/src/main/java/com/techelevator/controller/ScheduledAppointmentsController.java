@@ -1,6 +1,7 @@
 package com.techelevator.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.techelevator.model.ScheduledAppointments;
@@ -19,27 +20,32 @@ public class ScheduledAppointmentsController {
         this.scheduledAppointmentsService = scheduledAppointmentsService;
     }
 
-    @GetMapping("")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST')") 
+    @GetMapping
     public List<ScheduledAppointments> getAllScheduledAppointments() {
         return scheduledAppointmentsService.getAllScheduledAppointments();
     }
 
+    @PreAuthorize("@securityService.isPatientOwnedByUser(#patientId, authentication.principal.userId) or hasAnyRole ('ROLE_ADMIN', 'ROLE_RECEPTIONIST')")
     @GetMapping("/patient/{patientId}")
     public List<ScheduledAppointments> getScheduledAppointmentsByPatientId(@PathVariable int patientId) {
         return scheduledAppointmentsService.getScheduledAppointmentsByPatientId(patientId);
     }
 
+    @PreAuthorize("@securityService.isClinicianOwnedByUser(#npiNumber, authentication.principal.userId) or hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST')")
     @GetMapping("/doctor/{npiNumber}")
     public List<ScheduledAppointments> getScheduledAppointmentsByDoctorId(@PathVariable int npiNumber) {
         return scheduledAppointmentsService.getScheduledAppointmentsByDoctorId(npiNumber);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST')")
     @GetMapping("/date/{date}")
     public List<ScheduledAppointments> getScheduledAppointmentsByDate(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         return scheduledAppointmentsService.getScheduledAppointmentsByDate(localDate);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_CLINICIAN', 'ROLE_PATIENT')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
@@ -49,6 +55,7 @@ public class ScheduledAppointmentsController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST')")
     @PutMapping
     public void updateScheduledAppointment(@RequestBody ScheduledAppointments appointment) {
         boolean success = scheduledAppointmentsService.updateScheduledAppointment(appointment);
@@ -57,6 +64,7 @@ public class ScheduledAppointmentsController {
         }
     }
 
+    @PreAuthorize("@securityService.isPatientOwnedByUser(#appointmentId, authentication.principal.userId) or hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST')")
     @DeleteMapping("/{appointmentId}")
     public void deleteScheduledAppointment(@PathVariable int appointmentId) {
         boolean success = scheduledAppointmentsService.deleteScheduledAppointment(appointmentId);
