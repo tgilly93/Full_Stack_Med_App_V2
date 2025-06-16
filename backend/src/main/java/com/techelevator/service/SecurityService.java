@@ -33,4 +33,8 @@ public class SecurityService {
         Staff staff = staffDao.getStaffById(staffId);
         return staff != null && staff.getUserId() == userId;
     }
+
+    public boolean isUserIdMatching(int id, int userId) {
+        return id == userId;
+    }
 }
