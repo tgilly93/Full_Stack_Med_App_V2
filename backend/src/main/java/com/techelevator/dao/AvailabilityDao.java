@@ -18,4 +18,6 @@ public interface AvailabilityDao {
     List<Availability> getAvailabilityByDate(LocalDate date);
 
     List<Availability> getAvailabilityByDoctorIdAndDate(int npiNumber, LocalDate date);
+
+    Availability getAvailabilityById(int availabilityId);
 }

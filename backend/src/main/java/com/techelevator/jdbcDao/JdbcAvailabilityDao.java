@@ -89,4 +89,11 @@ public class JdbcAvailabilityDao implements AvailabilityDao {
         
         return jdbcTemplate.query(sql, availabilityRowMapper, npiNumber, date);
     }
+
+    @Override
+    public Availability getAvailabilityById(int availabilityId) {
+        String sql = "SELECT * FROM availability WHERE availability_id = ?";
+        List<Availability> results = jdbcTemplate.query(sql, availabilityRowMapper, availabilityId);
+        return results.isEmpty() ? null : results.get(0);
+    }
 }
