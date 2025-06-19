@@ -39,4 +39,8 @@ public class AvailabilityService {
     public List<Availability> getAvailabilityByDoctorIdAndDate(int npiNumber, LocalDate date) {
         return availabilityDao.getAvailabilityByDoctorIdAndDate(npiNumber, date);
     }
+
+    public Availability getAvailabilityById(int availabilityId) {
+        return availabilityDao.getAvailabilityById(availabilityId);
+    }
 }
