@@ -45,7 +45,7 @@ public class MessagesController {
     public boolean softDeleteMessage(@PathVariable int messageId, @PathVariable int userId) {
         return messagesService.softDeleteMessage(messageId, userId);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/admin-delete/{messageId}")
     public boolean hardDeleteMessage(@PathVariable int messageId) {
         return messagesService.hardDeleteMessage(messageId);
