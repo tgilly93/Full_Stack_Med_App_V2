@@ -25,6 +25,7 @@ public class MessagesController {
         this.messagesService = messagesService;
     }
 
+    @PreAuthorize("hasRole ('ROLE_ADMIN')")
     @GetMapping("{messageId}")
     public Messages getMessageById(@PathVariable int messageId) {
         return messagesService.getMessagesById(messageId);
