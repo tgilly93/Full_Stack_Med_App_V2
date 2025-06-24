@@ -25,12 +25,13 @@ public class MessagesController {
         this.messagesService = messagesService;
     }
 
-    @PreAuthorize("hasRole ('ROLE_ADMIN')")
+    @PreAuthorize("@securityService.canUserAccessMessage(#messageId, authentication.principal.userId) or hasRole('ROLE_ADMIN')")
     @GetMapping("{messageId}")
     public Messages getMessageById(@PathVariable int messageId) {
         return messagesService.getMessagesById(messageId);
     }
 
+    @PreAuthorize("@securityService.isUserIdMatching(#userId, authentication.principal.userId) or hasRole('ROLE_ADMIN')")
     @GetMapping("/user/{userId}") // Inbox
     public List<Messages> getMessagesForUser(@PathVariable int userId) {
         return messagesService.getMessagesForUser(userId);
@@ -42,6 +43,7 @@ public class MessagesController {
         return messagesService.sendMessage(message);
     }
 
+    @PreAuthorize("@securityService.isMessageOwnedByAuthUser(#messageId, authentication.principal.userId, #userId) or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/user-delete/{messageId}/user/{userId}")
     public boolean softDeleteMessage(@PathVariable int messageId, @PathVariable int userId) {
         return messagesService.softDeleteMessage(messageId, userId);
