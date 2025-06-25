@@ -39,6 +39,7 @@ public class NotificationController {
         return notificationService.getNotificationById(notificationId);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_CLINICIAN', 'ROLE_PATIENT')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public boolean createNotification(@RequestBody Notification notification) {
