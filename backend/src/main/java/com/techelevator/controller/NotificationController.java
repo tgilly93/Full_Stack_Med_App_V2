@@ -29,6 +29,7 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
+    @PreAuthorize("@securityService.isUserIdMatching(#userId, authentication.principal.userId) or hasRole ('ROLE_ADMIN')")
     @GetMapping("/user/{userId}")
     public List<Notification> getNotificationsByUserId(@PathVariable int userId) {
         return notificationService.getNotificationsByUserId(userId);
