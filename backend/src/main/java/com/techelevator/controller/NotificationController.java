@@ -35,6 +35,7 @@ public class NotificationController {
         return notificationService.getNotificationsByUserId(userId);
     }
 
+    @PreAuthorize("hasRole ('ROLE_ADMIN')")
     @GetMapping("/{notificationId}")
     public Notification getNotificationById(@PathVariable int notificationId) {
         return notificationService.getNotificationById(notificationId);
