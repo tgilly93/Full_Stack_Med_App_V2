@@ -6,6 +6,7 @@ import com.techelevator.dao.StaffDao;
 import com.techelevator.model.Availability;
 import com.techelevator.model.Clinician;
 import com.techelevator.model.Messages;
+import com.techelevator.model.Notification;
 import com.techelevator.model.Patient;
 import com.techelevator.model.Staff;
 
@@ -16,13 +17,15 @@ public class SecurityService {
     private final StaffDao staffDao;
     private final AvailabilityService availabilityService;
     private final MessagesService messagesService;
+    private final NotificationService notificationService;
 
-    public SecurityService(PatientService patientService, ClinicianService clinicianService, StaffDao staffDao, AvailabilityService availabilityService, MessagesService messagesService) {
+    public SecurityService(PatientService patientService, ClinicianService clinicianService, StaffDao staffDao, AvailabilityService availabilityService, MessagesService messagesService, NotificationService notificationService) {
         this.patientService = patientService;
         this.clinicianService = clinicianService;
         this.staffDao = staffDao;
         this.availabilityService = availabilityService;
         this.messagesService = messagesService;
+        this.notificationService = notificationService;
     }
 
     public boolean isPatientOwnedByUser(int patientId, int userId) {
@@ -65,5 +68,11 @@ public class SecurityService {
         Messages message = messagesService.getMessagesById(messageId);
         return message != null && 
                (message.getSenderId() == userId || message.getReceiverId() == userId);
+    }
+
+    public boolean isNotificationOwnedByUser(int notificationId, int userId) {
+        Notification notification = notificationService.getNotificationById(notificationId);
+
+        return notification != null && notification.getUserId() == userId;
     }
 }

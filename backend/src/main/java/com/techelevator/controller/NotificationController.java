@@ -54,6 +54,7 @@ public class NotificationController {
         return notificationService.updateNotificationStatus(notificationId, notificationStatus);
     }
 
+    @PreAuthorize("@securityService.isNotificationOwnedByUser(#notificationId, authentication.principal.userId) or hasRole ('ROLE_ADMIN')")
     @DeleteMapping("/{notificationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public boolean deleteNotification(@PathVariable int notificationId) {
