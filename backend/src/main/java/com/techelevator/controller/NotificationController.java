@@ -35,7 +35,7 @@ public class NotificationController {
         return notificationService.getNotificationsByUserId(userId);
     }
 
-    @PreAuthorize("hasRole ('ROLE_ADMIN')")
+    @PreAuthorize("@securityService.isNotificationOwnedByUser(#notificationId, authentication.principal.userId) or hasRole ('ROLE_ADMIN')")
     @GetMapping("/{notificationId}")
     public Notification getNotificationById(@PathVariable int notificationId) {
         return notificationService.getNotificationById(notificationId);
