@@ -19,7 +19,6 @@ import com.techelevator.security.UserModelDetailsService;
 
 import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider implements InitializingBean {
