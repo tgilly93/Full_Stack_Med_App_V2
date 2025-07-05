@@ -46,7 +46,7 @@ public class UsersController {
         return usersService.createUser(user);
     }
 
-    @PreAuthorize("#userId == authentication.principal.userId or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("@securityService.isUserIdMatching(#userId, authentication.principal.userId) or hasRole('ROLE_ADMIN')")
     @PutMapping("/{userId}")
     public boolean updateUser(@PathVariable int userId, @RequestBody Users user) {
         user.setUserId(userId);
