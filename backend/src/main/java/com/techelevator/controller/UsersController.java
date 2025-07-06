@@ -53,7 +53,7 @@ public class UsersController {
         return usersService.updateUser(user);
     }
 
-    @PreAuthorize("#userId == authentication.principal.userId or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("@securityService.isUserIdMatching(#userId, authentication.principal.userId) or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/delete/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public boolean deleteUser(@PathVariable int userId) {
