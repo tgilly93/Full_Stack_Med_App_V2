@@ -14,6 +14,5 @@
 ## ⚙️ Backend Issues
 
 <!-- BACKEND-ISSUES-START -->
-- [#53](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/53) Test All Roles
-- [#50](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/50) Testing
+
 <!-- BACKEND-ISSUES-END -->
