@@ -54,3 +54,12 @@ export async function logoutUser() {
     clearUser();
 }
 
+apiClient.interceptors.request.use((config) => {
+    const token = getAuthToken();
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+    });
+
+export default apiClient;
