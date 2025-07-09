@@ -195,6 +195,7 @@ const Register = forwardRef((props, ref) => {
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
+                    required
                     />
                 </Form.Group>
               </Col>
