@@ -16,7 +16,7 @@ function Welcome() {
       <>
       <Container
         fluid
-        className="min-vh-100 d-flex justify-content-center align-items-center bg-light"
+        className="min-vh-100 d-flex justify-content-center align-items-center bg-light p-3"
       >
         <Row>
           <Col className="text-center">

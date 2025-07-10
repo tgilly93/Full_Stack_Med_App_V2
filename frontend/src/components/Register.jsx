@@ -67,7 +67,7 @@ const Register = forwardRef((props, ref) => {
   };
 
   return (
-    <section id="register" className="vh-100 bg-white" ref={ref}>
+    <section id="register" className="min-vh-100 bg-white" ref={ref}>
       <Container className="d-flex justify-content-center align-items-center h-100">
         <Row>
           <Col className="text-center">
@@ -127,7 +127,7 @@ const Register = forwardRef((props, ref) => {
                   <Form.Label>Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
-                    name="confirmpassword"
+                    name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     required
