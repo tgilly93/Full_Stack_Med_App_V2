@@ -37,7 +37,11 @@ function Welcome() {
         </Row>
       </Container>
 
-      <Register ref={registerRef} />
+      <Register 
+        ref={registerRef}
+        loginRef={loginRef}
+        scrollToSection={scrollToSection}
+         />
       <Login ref={loginRef} />
       </>
     );  

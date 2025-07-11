@@ -2,7 +2,7 @@ import React, { forwardRef, useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { registerUser } from "../services/authService";
 
-const Register = forwardRef((props, ref) => {
+const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -59,6 +59,13 @@ const Register = forwardRef((props, ref) => {
         primaryOffice: "",
         role: "ROLE_PATIENT",
       });
+
+      setTimeout(() => {
+        if (scrollToSection && loginRef) {
+          scrollToSection(loginRef);
+        }
+        }, 1500); 
+
     } catch (err) {
       console.error("Registration error:", err);
       setError(true);
