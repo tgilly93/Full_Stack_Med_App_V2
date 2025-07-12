@@ -16,7 +16,9 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
     stateCode: "",
     ZIP: "",
     primaryOffice: "",
-    role: "ROLE_PATIENT", // add dynamic role selection later
+    role: "ROLE_PATIENT",
+    npiNumber: "",
+    clinicianRatePerHour: "",
   });
 
   const [message, setMessage] = useState("");
@@ -39,6 +41,9 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
     const payload = {
       ...formData,
       primaryOffice: parseInt(formData.primaryOffice),
+      clinicianRatePerHour: formData.clinicianRatePerHour
+        ? parseFloat(formData.clinicianRatePerHour)
+        : undefined,
     };
 
     try {
@@ -58,6 +63,8 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
         ZIP: "",
         primaryOffice: "",
         role: "ROLE_PATIENT",
+        npiNumber: "",
+        clinicianRatePerHour: "",
       });
 
       setTimeout(() => {
@@ -87,6 +94,22 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
             )}
 
             <Form onSubmit={handleSubmit}>
+              <Form.Group>
+                <Form.Label>Select Role</Form.Label>
+                <Form.Select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="ROLE_PATIENT">Patient</option>
+                  <option value="ROLE_CLINICIAN">Clinician</option>
+                  <option value="ROLE_ADMIN">Admin</option>
+                  <option value="ROLE_RECEPTIONIST">Receptionist</option>
+                  <option value="ROLE_STAFF">Staff</option>
+                </Form.Select>
+              </Form.Group>
+
               <Row>
                 <Col md={6}>
                 <Form.Group className="mb-3">
@@ -244,6 +267,32 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
                 required
               />
             </Form.Group>
+
+            {formData.role === "ROLE_CLINICIAN" && (
+              <>
+              <Form.Group className="mb-3">
+                <Form.Label>NPI Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="npiNumber"
+                  value={formData.npiNumber}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Clinician Rate Per Hour</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="clinicianRatePerHour"
+                  value={formData.clinicianRatePerHour}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+              </>
+            )}
 
             <Button
               type="submit"
