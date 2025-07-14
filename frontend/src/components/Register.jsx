@@ -21,8 +21,109 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
     clinicianRatePerHour: "",
   });
 
+  const [cities, setCities] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
+
+  const stateCityMap = {
+    "AL": ["Birmingham", "Montgomery", "Mobile", "Huntsville", "Tuscaloosa"],
+    "AK": ["Anchorage", "Fairbanks", "Juneau", "Sitka", "Ketchikan"],
+    "AZ": ["Phoenix", "Tucson", "Mesa", "Chandler",
+      "Scottsdale"],
+    "AR": ["Little Rock", "Fort Smith", "Fayetteville",
+      "Springdale", "Jonesboro"],
+    "CA": ["Los Angeles", "San Francisco", "San Diego",
+      "Sacramento", "San Jose"],
+    "CO": ["Denver", "Colorado Springs", "Aurora",
+      "Fort Collins", "Lakewood"],
+    "CT": ["Hartford", "New Haven", "Bridgeport",
+      "Stamford", "Waterbury"],
+    "DE": ["Wilmington", "Dover", "Newark", "Middletown",
+      "Smyrna"],
+    "FL": ["Miami", "Orlando", "Tampa", "Jacksonville",
+      "St. Petersburg"],
+    "GA": ["Atlanta", "Augusta", "Columbus", "Savannah",
+      "Athens"],
+    "HI": ["Honolulu", "Hilo", "Kailua", "Kaneohe",
+      "Waipahu"],
+    "ID": ["Boise", "Nampa", "Meridian", "Idaho Falls", "Pocatello"],
+    "IL": ["Chicago", "Aurora", "Naperville", "Rockford",
+      "Joliet"],
+    "IN": ["Indianapolis", "Fort Wayne", "Evansville",
+      "South Bend", "Carmel"],
+    "IA": ["Des Moines", "Cedar Rapids", "Davenport",
+      "Sioux City", "Iowa City"],
+    "KS": ["Wichita", "Overland Park", "Kansas City",
+      "Topeka", "Olathe"],
+    "KY": ["Louisville", "Lexington", "Bowling Green",
+      "Owensboro", "Covington"],
+    "LA": ["New Orleans", "Baton Rouge", "Shreveport",
+      "Lafayette", "Lake Charles"],
+    "ME": ["Portland", "Lewiston", "Bangor", "Augusta",
+      "South Portland"],
+    "MD": ["Baltimore", "Frederick", "Rockville",
+      "Gaithersburg", "Bowie"],
+    "MA": ["Boston", "Worcester", "Springfield",
+      "Cambridge", "Lowell"],
+    "MI": ["Detroit", "Grand Rapids", "Warren",
+      "Sterling Heights", "Lansing"],
+    "MN": ["Minneapolis", "Saint Paul", "Rochester",
+      "Duluth", "Bloomington"],
+    "MS": ["Jackson", "Gulfport", "Southaven",
+      "Hattiesburg", "Biloxi"],
+    "MO": ["Kansas City", "Saint Louis", "Springfield",
+      "Columbia", "Independence"],
+    "MT": ["Billings", "Missoula", "Great Falls",
+      "Bozeman", "Butte"],
+    "NE": ["Omaha", "Lincoln", "Bellevue", "Grand Island",
+      "Kearney"],
+    "NV": ["Las Vegas", "Henderson", "Reno", "North Las Vegas",
+      "Sparks"],
+    "NH": ["Manchester", "Nashua", "Concord", "Dover",
+      "Rochester"],
+    "NJ": ["Newark", "Jersey City", "Paterson", "Elizabeth",
+      "Edison"],
+    "NM": ["Albuquerque", "Las Cruces", "Rio Rancho",
+      "Santa Fe", "Roswell"],
+    "NY": ["New York City", "Buffalo", "Rochester",
+      "Yonkers", "Syracuse"],
+    "NC": ["Charlotte", "Raleigh", "Greensboro",
+      "Durham", "Winston-Salem"],
+    "ND": ["Fargo", "Bismarck", "Grand Forks",
+      "Minot", "West Fargo"],
+    "OH": ["Columbus", "Cleveland", "Cincinnati",
+      "Toledo", "Akron"],
+    "OK": ["Oklahoma City", "Tulsa", "Norman",
+      "Broken Arrow", "Lawton"],
+    "OR": ["Portland", "Salem", "Eugene", "Gresham",
+      "Hillsboro"],
+    "PA": ["Philadelphia", "Pittsburgh", "Allentown",
+      "Erie", "Reading"],
+    "RI": ["Providence", "Warwick", "Cranston",
+      "Pawtucket", "East Providence"],
+    "SC": ["Columbia", "Charleston", "North Charleston",
+      "Mount Pleasant", "Rock Hill"],
+    "SD": ["Sioux Falls", "Rapid City", "Aberdeen",
+      "Brookings", "Watertown"],
+    "TN": ["Nashville", "Memphis", "Knoxville",
+      "Chattanooga", "Clarksville"],
+    "TX": ["Houston", "San Antonio", "Dallas",
+      "Austin", "Fort Worth"],
+    "UT": ["Salt Lake City", "West Valley City",
+      "Provo", "West Jordan", "Orem"],
+    "VT": ["Burlington", "Essex", "South Burlington",
+      "Rutland", "Barre"],
+    "VA": ["Virginia Beach", "Norfolk", "Chesapeake",
+      "Richmond", "Newport News"],
+    "WA": ["Seattle", "Spokane", "Tacoma",
+      "Vancouver", "Bellevue"],
+    "WV": ["Charleston", "Huntington", "Morgantown",
+      "Parkersburg", "Wheeling"],
+    "WI": ["Milwaukee", "Madison", "Green Bay",
+      "Kenosha", "Racine"],
+    "WY": ["Cheyenne", "Casper", "Laramie",
+      "Gillette", "Rock Springs"],
+  };  
 
   const passwordsMatch = formData.password === formData.confirmPassword;
   const phoneNumberValid = /^\d{10}$/.test(formData.phoneNumber);
@@ -55,7 +156,12 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
       ...prevData,
       [name]: value,
     }));
-  };
+
+  if (name === "stateCode") {
+    setCities(stateCityMap[value] || []);
+    setFormData((prevData) => ({ ...prevData, city: "" }));
+  }
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,6 +196,7 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
         npiNumber: "",
         clinicianRatePerHour: "",
       });
+      setCities([]);
 
       setTimeout(() => {
         if (scrollToSection && loginRef) {
@@ -118,7 +225,7 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
             )}
 
             <Form onSubmit={handleSubmit}>
-              <Form.Group>
+              <Form.Group className="mb-3">
                 <Form.Label>Select Role</Form.Label>
                 <Form.Select
                   name="role"
@@ -275,34 +382,46 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
             <Row>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>City</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="city"
-                    value={formData.city}
+                  <Form.Label>State</Form.Label>
+                  <Form.Select
+                    name="stateCode"
+                    value={formData.stateCode}
                     onChange={handleChange}
                     required
-                    isInvalid={!formData.city.trim()}
-                    />
+                    isInvalid={!formData.stateCode.trim()}
+                  >
+                    <option value="">Select State</option>
+                    {Object.keys(stateCityMap).map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </Form.Select>
                   <Form.Control.Feedback type="invalid">
-                    City is required.
+                    State is required.
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
 
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>State</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="stateCode"
-                    value={formData.stateCode}
+                  <Form.Label>City</Form.Label>
+                  <Form.Select
+                    name="city"
+                    value={formData.city}
                     onChange={handleChange}
                     required
-                    isInvalid={!formData.stateCode.trim()}
-                  />
+                    isInvalid={!formData.city.trim()}
+                  >
+                    <option value="">Select City</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </Form.Select>
                   <Form.Control.Feedback type="invalid">
-                    State is required.
+                    City is required.
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
