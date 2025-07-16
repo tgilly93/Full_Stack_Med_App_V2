@@ -2,6 +2,7 @@ import React, { forwardRef, useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { registerUser } from "../services/authService";
 import stateCityMap from "../data/stateCityMap"; 
+import zipMap from "../data/zipMap";
 
 const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
   const [formData, setFormData] = useState({
@@ -61,6 +62,12 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
   if (name === "stateCode") {
     setCities(stateCityMap[value] || []);
     setFormData((prevData) => ({ ...prevData, city: "" }));
+  }
+
+  if (name === "city") {
+    const key = `${formData.stateCode}|${value}`;
+    const zipOptions = zipMap[key] || "";
+    setFormData((prevData) => ({ ...prevData, city: value, ZIP: zipOptions }));
   }
 };
 
