@@ -120,7 +120,7 @@ const Register = forwardRef(({ scrollToSection, loginRef }, ref) => {
   };
 
   return (
-    <section id="register" className="min-vh-100 bg-white" ref={ref}>
+    <section id="register" className="min-vh-100 bg-white py-5" ref={ref}>
       <Container className="d-flex justify-content-center align-items-center h-100">
         <Row>
           <Col className="text-center">
