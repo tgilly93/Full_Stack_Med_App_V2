@@ -9,9 +9,9 @@ const Login = forwardRef((props, ref) => {
                     <Col className="text-center">
                         <h1>Login</h1>
                         <Form>
-                            <Form.Group controlId="formBasicEmail">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Group controlId="formBasicUsername">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control type="text" placeholder="Enter Username" />
                             </Form.Group>
 
                             <Form.Group controlId="formBasicPassword">
