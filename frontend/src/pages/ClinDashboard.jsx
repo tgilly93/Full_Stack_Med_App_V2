@@ -5,7 +5,7 @@ import EditProfile from "../components/EditProfile";
 import Appointment from "../components/Appointment";
 import MyAppointments from "../components/MyAppointments";
 
-function Dashboard() {
+function ClinDashboard() {
   return (
     <>
       <NavBar />
@@ -34,4 +34,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default ClinDashboard;
