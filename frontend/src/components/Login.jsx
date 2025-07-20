@@ -1,36 +1,84 @@
-import React, { forwardRef } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import React, { forwardRef, useState } from "react";
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+import { loginUser } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 const Login = forwardRef((props, ref) => {
-    return (
-        <section id="login" className="vh-100 bg-light" ref={ref}>
-            <Container className="d-flex justify-content-center align-items-center h-100">
-                <Row>
-                    <Col className="text-center">
-                        <h1>Login</h1>
-                        <Form>
-                            <Form.Group controlId="formBasicUsername">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter Username" />
-                            </Form.Group>
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
 
-                            <Form.Group controlId="formBasicPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" />
-                            </Form.Group>
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
 
-                            <Button variant="primary" type="submit">
-                                Submit
-                            </Button>
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
-        </section>
-    );
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setError(false);
+
+    try {
+      await loginUser(formData);
+      navigate("/admindashboard");
+    } catch (err) {
+      console.error("Login failed:", err);
+      setError(true);
+      setMessage("Login failed. Invalid username or password.");
+    }
+  };
+
+  return (
+    <section id="login" className="vh-100 bg-light" ref={ref}>
+      <Container className="d-flex justify-content-center align-items-center h-100">
+        <Row>
+          <Col className="text-center">
+            <h1>Login</h1>
+
+            {message && (
+              <Alert variant={error ? "danger" : "success"}>{message}</Alert>
+            )}
+
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Button variant="primary" type="submit" className="w-100">
+                Submit
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
+    </section>
+  );
 });
-
-
-
 
 export default Login;
