@@ -25,8 +25,27 @@ const Login = forwardRef((props, ref) => {
     setError(false);
 
     try {
-      await loginUser(formData);
-      navigate("/admindashboard");
+      const { user } = await loginUser(formData);
+
+      switch (user.role) {
+        case "ROLE_ADMIN":
+            navigate("/dashboard-admin");
+            break;
+        case "ROLE_CLINICIAN":
+            navigate("/dashboard-clin"); 
+            break;
+        case "ROLE_STAFF":
+            navigate("/dashboard-staff");
+            break;
+        case "ROLE_PATIENT":
+            navigate("/dashboard-patient");
+            break;
+        case "ROLE_RECEPTIONIST":
+            navigate("/dashboard-receptionist");
+            break;
+        default:
+            navigate("/");
+      }
     } catch (err) {
       console.error("Login failed:", err);
       setError(true);
