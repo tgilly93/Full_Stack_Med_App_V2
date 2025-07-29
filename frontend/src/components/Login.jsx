@@ -2,6 +2,8 @@ import React, { forwardRef, useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { loginUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../store/authSlice";
 
 const Login = forwardRef((props, ref) => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,7 @@ const Login = forwardRef((props, ref) => {
   const [error, setError] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,26 +28,27 @@ const Login = forwardRef((props, ref) => {
     setError(false);
 
     try {
-      const { user } = await loginUser(formData);
+      const { token, user } = await loginUser(formData);
+      dispatch(login({ token, user }));
 
       switch (user.role) {
         case "ROLE_ADMIN":
-            navigate("/dashboard-admin");
-            break;
+          navigate("/dashboard-admin");
+          break;
         case "ROLE_CLINICIAN":
-            navigate("/dashboard-clin"); 
-            break;
+          navigate("/dashboard-clin");
+          break;
         case "ROLE_STAFF":
-            navigate("/dashboard-staff");
-            break;
+          navigate("/dashboard-staff");
+          break;
         case "ROLE_PATIENT":
-            navigate("/dashboard-patient");
-            break;
+          navigate("/dashboard-patient");
+          break;
         case "ROLE_RECEPTIONIST":
-            navigate("/dashboard-receptionist");
-            break;
+          navigate("/dashboard-receptionist");
+          break;
         default:
-            navigate("/");
+          navigate("/");
       }
     } catch (err) {
       console.error("Login failed:", err);
