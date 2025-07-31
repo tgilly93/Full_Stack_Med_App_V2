@@ -12,5 +12,5 @@
 ## ⚙️ Backend Issues
 
 <!-- BACKEND-ISSUES-START -->
-
+- [#122](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/122) Complete Full Stack Config
 <!-- BACKEND-ISSUES-END -->
