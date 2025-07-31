@@ -3,6 +3,7 @@
 ## 🖥️ Frontend Issues
 
 <!-- FRONTEND-ISSUES-START -->
+- [#124](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/124) Logout Component
 - [#26](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/26) MyAppointments Component
 - [#23](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/23) Appointment Component
 - [#22](https://github.com/tgilly93/Full_Stack_Med_App_V2/issues/22) Edit Profile Component
