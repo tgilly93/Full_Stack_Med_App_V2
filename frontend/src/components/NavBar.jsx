@@ -1,5 +1,6 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown, Container, Form, FormControl, Button } from "react-bootstrap";
+import LogoutButton from "./LogoutButton";
 
 function NavBar() {
     return (
@@ -36,8 +37,9 @@ function NavBar() {
                 className="me-2"
                 aria-label="Search"
               />
-              <Button variant="outline-light">Search</Button>
+              <Button variant="outline-light" className="me-2">Search</Button>
             </Form>
+              <LogoutButton />
           </Navbar.Collapse>
         </Container>
       </Navbar>
